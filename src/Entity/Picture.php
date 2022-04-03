@@ -14,9 +14,9 @@ class Picture
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $file_name;
+    private $filename;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'boolean')]
     private $main;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'pictures')]
@@ -28,24 +28,24 @@ class Picture
         return $this->id;
     }
 
-    public function getFileName(): ?string
+    public function getFilename(): ?string
     {
-        return $this->file_name;
+        return $this->filename;
     }
 
-    public function setFileName(string $file_name): self
+    public function setFilename(string $filename): self
     {
-        $this->file_name = $file_name;
+        $this->filename = $filename;
 
         return $this;
     }
 
-    public function getMain(): ?string
+    public function getMain(): ?bool
     {
         return $this->main;
     }
 
-    public function setMain(string $main): self
+    public function setMain(bool $main): self
     {
         $this->main = $main;
 

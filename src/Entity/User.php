@@ -26,17 +26,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: 'string', length: 100, unique: true)]
     private $pseudo;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $avatar;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'boolean')]
     private $activated;
 
     #[ORM\Column(type: 'integer')]
-    private $validated_token;
+    private $validatedToken;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Trick::class)]
     private $tricks;
@@ -158,12 +158,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getValidatedToken(): ?int
     {
-        return $this->validated_token;
+        return $this->validatedToken;
     }
 
-    public function setValidatedToken(int $validated_token): self
+    public function setValidatedToken(int $validatedToken): self
     {
-        $this->validated_token = $validated_token;
+        $this->validatedToken = $validatedToken;
 
         return $this;
     }
