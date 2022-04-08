@@ -28,19 +28,19 @@ class CategoryFixtures extends Fixture
             $categorySave[] = $category;
         } */
 
-        $this->createCategory("grab", 'Un grab consiste à attraper la planche avec la main pendant le saut. Le verbe anglais to grab signifie « attraper. »', $manager );
-        $this->createCategory('rotation', 'On désigne par le mot « rotation » uniquement des rotations horizontales ; les rotations verticales sont des flips.', $manager);
+        $this->createCategory("grab", 'Un grab consiste à attraper la planche avec la main pendant le saut. Le verbe anglais to grab signifie « attraper. »', 'category1', $manager );
+        $this->createCategory('rotation', 'On désigne par le mot « rotation » uniquement des rotations horizontales ; les rotations verticales sont des flips.', 'category2', $manager);
 
-        $this->createCategory('flip', 'Un flip est une rotation verticale. On distingue les front flips, rotations en avant, et les back flips, rotations en arrière.', $manager);
+        $this->createCategory('flip', 'Un flip est une rotation verticale. On distingue les front flips, rotations en avant, et les back flips, rotations en arrière.', 'category3', $manager);
 
-        $this->createCategory('slide', 'Un slide consiste à glisser sur une barre de slide. Le slide se fait soit avec la planche dans l\'axe de la barre, soit perpendiculaire, soit plus ou moins désaxé.', $manager);
+        $this->createCategory('slide', 'Un slide consiste à glisser sur une barre de slide. Le slide se fait soit avec la planche dans l\'axe de la barre, soit perpendiculaire, soit plus ou moins désaxé.', 'category4', $manager);
 
-        $this->createCategory('old school', 'Le terme old school désigne un style de freestyle caractérisée par en ensemble de figure et une manière de réaliser des figures passée de mode, qui fait penser au freestyle des années 1980 - début 1990 ', $manager);
+        $this->createCategory('old school', 'Le terme old school désigne un style de freestyle caractérisée par en ensemble de figure et une manière de réaliser des figures passée de mode, qui fait penser au freestyle des années 1980 - début 1990 ', 'category5', $manager);
 
         $manager->flush();
     }
 
-    public function createCategory($name, $description, ObjectManager $manager){
+    public function createCategory($name, $description, $reference, ObjectManager $manager){
 
         $category = new Category();
 
@@ -49,6 +49,10 @@ class CategoryFixtures extends Fixture
             $category->setSlug($this->slugger->slug($category->getName()));
 
             $manager->persist($category);
+
+            $this->addReference($reference, $category);
+            
+            return $category;
 
     }
 }

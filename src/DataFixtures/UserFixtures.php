@@ -17,29 +17,36 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
 
-        $admin = new User();
-        $admin->setEmail('berni@gmail.com');
-        $admin->setPseudo('Berni');
-        $admin->setAvatar('');
-        $admin->setActivated(true);
-        $admin->setPassword($this->passwordEncoder->hashPassword($admin, 'berni123'));
-        $admin->setRoles(['ROLE_USER']);
-        $admin->setValidatedToken(22020289675764);
+        $this->createUser('Berni','berni@gmail.com',' ', 'berni123', 'user1', $manager);
 
-        $manager->persist($admin);
+        $this->createUser('Ola','Ola@gmail.com', ' ', 'ola123', 'user2', $manager);
 
-        $user = new User();
-        $user->setEmail('Ola@gmail.com');
-        $user->setPseudo('Ola');
-        $user->setAvatar('');
+        $this->createUser('Jack', 'jack@yahoo.fr', ' ', 'Jack1234', 'user3', $manager);
+        
+        $this->createUser('Erin', 'erin@gmail.com', ' ','Erin1234', 'user4', $manager);
+
+        $this->createUser('Gabin', 'gabin@gmail.com', ' ','Gabin1234', 'user5', $manager);
+
+        $manager->flush();
+    }
+
+    public function createUser($pseudo, $email, $avatar, $password, $reference, ObjectManager $manager){
+
+        $user = New User();
+
+        $user->setPseudo($pseudo);
+        $user->setEmail($email);
+        $user->setAvatar($avatar);
         $user->setActivated(false);
-        $user->setPassword($this->passwordEncoder->hashPassword($user, 'ola123'));
-        $user->setRoles(['ROLE_USER']);
-        $user->setValidatedToken(1111113131090131);
+        $user->setPassword($this->passwordEncoder->hashPassword($user, $password));
+        $user->setValidatedToken(null);
 
         $manager->persist($user);
 
-        $manager->flush();
+        $this->addReference($reference, $user);
+
+        return $user;
+
     }
 
 }
