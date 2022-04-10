@@ -6,10 +6,12 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -17,25 +19,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[ORM\Column(type: 'string', length: 100, unique: true)]
+    private $pseudo;
+
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
-
-    #[ORM\Column(type: 'json')]
-    private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\Column(type: 'string', length: 100, unique: true)]
-    private $pseudo;
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $avatar;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $activated;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $validatedToken;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Trick::class)]
@@ -43,6 +45,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
     private $comments;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     public function __construct()
     {
@@ -53,6 +58,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -120,17 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getPseudo(): ?string
-    {
-        return $this->pseudo;
-    }
-
-    public function setPseudo(string $pseudo): self
-    {
-        $this->pseudo = $pseudo;
-
-        return $this;
-    }
+   
 
     public function getAvatar(): ?string
     {
@@ -149,19 +156,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->activated;
     }
 
-    public function setActivated(int $activated): self
+    public function setActivated(?int $activated): self
     {
         $this->activated = $activated;
 
         return $this;
     }
 
-    public function getValidatedToken(): ?int
+    public function getValidatedToken(): ?string
     {
         return $this->validatedToken;
     }
 
-    public function setValidatedToken(int $validatedToken): self
+    public function setValidatedToken(?string $validatedToken): self
     {
         $this->validatedToken = $validatedToken;
 
@@ -224,6 +231,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $comment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

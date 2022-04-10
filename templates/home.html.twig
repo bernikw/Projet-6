@@ -4,9 +4,26 @@
 
 {% block body %}
 
-<div class="example-wrapper">
-    <h1>SnowTricks</h1>
-
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endfor %}
+<div class="container">
+<div class="card mb-3">
+  <h3 class="card-header text-center">SnowTricks</h3>
+  
+ <img src="asset/images/banniere.jpg" class="img-fluid" alt="...">
     
+</div>
+
+<figure class="figure">
+  <img
+    src="asset/images/trick-1.jpg"
+    class="figure-img img-fluid rounded shadow-3 mb-2"
+    alt="trick"
+  />
+  <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
+</figure>
+
+
 </div>
 {% endblock %}
