@@ -20,7 +20,7 @@ class CategoryFixtures extends Fixture
 
         $this->createCategory('rotation', 'On désigne par le mot « rotation » uniquement des rotations horizontales ; les rotations verticales sont des flips.', 'category2', $manager);
 
-        $this->createCategory('flips', 'Un flip est une rotation verticale. On distingue les front flips, rotations en avant, et les back flips, rotations en arrière.', 'category3', $manager);
+        $this->createCategory('flip', 'Un flip est une rotation verticale. On distingue les front flips, rotations en avant, et les back flips, rotations en arrière.', 'category3', $manager);
 
         $this->createCategory('slide', 'Un slide consiste à glisser sur une barre de slide. Le slide se fait soit avec la planche dans l\'axe de la barre, soit perpendiculaire, soit plus ou moins désaxé.', 'category4', $manager);
 
