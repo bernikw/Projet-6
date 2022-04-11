@@ -12,10 +12,15 @@
     {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.pseudo) }}
         {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
+       {# {{ form_row(registrationForm.Password, {
             label: 'Password'
-        }) }}
+        }) }} #}
+        {# .first and .second may vary in your use - see the note below #}
+        
+        {{ form_row(registrationForm.password.first) }}
+        {{ form_row(registrationForm.password.second) }}
         {{ form_row(registrationForm.agreeTerms) }}
+
 
         <button type="submit" class="btn">S'inscrire</button>
     {{ form_end(registrationForm) }}
