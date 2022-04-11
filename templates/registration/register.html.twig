@@ -7,9 +7,10 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <h1>S'inscrire sur SnowTricks</h1>
 
     {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.pseudo) }}
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
