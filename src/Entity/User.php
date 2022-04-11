@@ -9,23 +9,35 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
-{
+{ 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
     #[ORM\Column(type: 'string', length: 100, unique: true)]
+    #[Assert\NotBlank (message: 'Cet champs ne paut pas être valide.',)]
     private $pseudo;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\Email(
+        message: 'Cet e-mail {{ value }} n\'est pas un e-mail valide.',
+    )]
+    #[Assert\NotBlank (message: 'Cet champs ne paut pas être valide.',)]
     private $email;
 
     #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank (message: 'Cet champs ne paut pas être valide.',)]
+    #[Assert\Regex(
+        pattern: '^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$^',
+        message: 'Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère spécial !',
+    )]
     private $password;
 
     #[ORM\Column(type: 'json')]
