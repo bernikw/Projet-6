@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Ce e-mail existe déjà')]
+#[UniqueEntity(fields: ['pseudo'], message: 'Ce Pseudo existe déjà')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 { 
     #[ORM\Id]

@@ -1,0 +1,14 @@
+<h1>Bonjour! Merci de confirmer ton e-mail</h1>
+
+<p>Bonjour {{ user.pseudo }},</p>
+
+<p>
+   Votre inscription sur le site SnowTricks est à valider en cliquant sur le lien ci-dessous : 
+   <br><br>
+
+
+   <a href="{{ url('app_verify_account', { 'pseudo': user.pseudo, 'validatedToken': user.validatedToken}) }}">Confirmez votre e-mail</a>. 
+   
+</p>
+
+
