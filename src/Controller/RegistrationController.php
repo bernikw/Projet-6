@@ -23,9 +23,13 @@ class RegistrationController extends AbstractController
     #[Route('/inscription', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager, SendEmailService $mail): Response
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
@@ -50,7 +54,10 @@ class RegistrationController extends AbstractController
                 $user->getEmail(),
                 'Veuillez activer votre compte',
                 'register_email',
-                compact('user')
+                [
+                    'user'=> $user,
+                    'validatedToken'=> $user->getValidatedToken()
+                ]
             );
 
             $this->addFlash('success',
@@ -66,31 +73,31 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form->createView(),
         ]);
     }
-/*
-    #[Route('/verify_account/{activatedToken}', name: 'app_verify_account')]
 
-    public function verifyAccount(UserRepository $userRepository, $validatedToken,  EntityManagerInterface $entityManager): Response
+    #[Route('/verify_account/{pseudo}/{validatedToken}', name: 'app_verify_account')] 
+    public function verifyAccount(UserRepository $userRepository, $pseudo, $validatedToken,  EntityManagerInterface $entityManager): Response
     {
-        $user = $userRepository->find($validatedToken);
+        $user = $userRepository->findOneByPseudo($pseudo);
 
         if($validatedToken !== null && $validatedToken === $user->getValidatedToken()){
 
             $user->setActivated(true);
+
+            $user->setValidatedToken(null);
+
             $entityManager->flush($user);
 
-            $this->addFlash(
-                'success',
+            $this->addFlash('success',
                 "Votre compte a été activé avec succès ! Vous pouvez désormais vous connecter !"
             );
 
         } else{
 
-            $this->addFlash(
-                'danger',
-                "La validation de votre compte a échoué. Le lien de validation a expiré !"
+            $this->addFlash('danger',
+                "Le compté a déjà été validé !"
             );  
         }
 
         return $this->redirectToRoute('app_home');
-    }*/
+    }
 }

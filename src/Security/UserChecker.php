@@ -16,17 +16,18 @@ class UserChecker implements UserCheckerInterface
         if (!$user instanceof User) {
             return;
         }
-
-        if (!$user->getActivated()) {
-            
-            throw new CustomUserMessageAccountStatusException('Votre compte n\'est pas activée');
-        }
+       
     }
 
     public function checkPostAuth(UserInterface $user): void
     {
         if (!$user instanceof User) {
             return;
+        }
+
+        if (!$user->getActivated()) {
+            
+            throw new CustomUserMessageAccountStatusException('Votre compte n\'est pas activée. Consultez votre e-mail.');
         }
         
     }

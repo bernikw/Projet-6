@@ -6,7 +6,8 @@
    Votre inscription sur le site SnowTricks est à valider en cliquant sur le lien ci-dessous : 
    <br><br>
 
-    <a href="">Confirmez votre e-mail</a>.
+
+   <a href="{{ url('app_verify_account', { 'pseudo': user.pseudo, 'validatedToken': user.validatedToken}) }}">Confirmez votre e-mail</a>. 
    
 </p>
 
