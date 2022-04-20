@@ -26,7 +26,9 @@
      
       {% if app.user %}
 
-      <a href="{{ path('app_logout') }}" role="button" class="btn btn-outline-light px-3 me-2">Se déconnecter</a>
+      <a href="#" role="button" class="btn btn-outline-light px-3 me-2">Bienvenue {{ app.user.pseudo}}</a>
+
+      <a href="{{ path('app_logout') }}" role="button" class="btn btn-outline-light px-3 me-2">Me déconnecter</a>
 
       {% else %}
 

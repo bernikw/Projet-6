@@ -16,6 +16,8 @@ class ForgotPasswordType extends AbstractType
             ->add('email', RepeatedType::class, [
                 'type' => EmailType::class,
                 'invalid_message' => 'Les adresses e-mail ne sont pas identiques.',
+                'options' => ['attr' => ['class' => 'password-field',
+                'class'=> 'form-control']],
                 'required' => true,
                 'first_options'  => ['label' => 'Saisir votre adress e-mail'],
                 'second_options' => ['label' => 'Confirmez votre adress e-mail'],
