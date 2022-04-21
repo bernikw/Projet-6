@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\UserAuthenticator;
 use App\Service\SendEmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use App\Repository\UserRepository;
 
 
@@ -21,11 +19,12 @@ class RegistrationController extends AbstractController
 {
  
     #[Route('/inscription', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager, SendEmailService $mail): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher,  EntityManagerInterface $entityManager, SendEmailService $mail): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
+        
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -75,7 +74,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify_account/{pseudo}/{validatedToken}', name: 'app_verify_account')] 
-    public function verifyAccount(UserRepository $userRepository, $pseudo, $validatedToken,  EntityManagerInterface $entityManager): Response
+    public function verifyAccount(UserRepository $userRepository, $pseudo, $validatedToken, EntityManagerInterface $entityManager): Response
     {
         $user = $userRepository->findOneByPseudo($pseudo);
 

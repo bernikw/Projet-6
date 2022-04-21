@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ForgotPasswordType;
+use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,58 +11,100 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\SendEmailService;
+use
+    Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 class ForgotPasswordController extends AbstractController
 {
 
-    #[Route('/forgot/password', name: 'app_forgot_password')]
-    public function sendRecoveryLink(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, SendEmailService $mail): Response
+    #[Route('/forgot/password/', name: 'app_forgot_password')]
+    public function sendRecoveryLink(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager,  SendEmailService $mail): Response
     {
 
         $form = $this->createForm(ForgotPasswordType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
-        $email = $form->getData('email');    
+            $email = $form->getData('email');
+            $user = $userRepository->findOneByEmail($email);
 
-        $user = $this->userRepository->findOneBy('email');
+            if ($user !== null && $user->getActivated() === 1) {
 
-        if(!$user){
+                $user
+                    ->setResetPasswordToken(uniqid());
 
-            $user->setValidatedToken(uniqid());
+                $entityManager->persist($user);
+                $entityManager->flush();
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+                $mail->send(
+                    'snowtricks@gmail.com',
+                    $user->getEmail(),
+                    'SnowTricks - Réinitilisation du mot de passe',
+                    'forgot_email',
+                    [
+                        'user' => $user,
+                        'resetPasswordToken' => $user->getResetPasswordToken()
+                    ]
+                );
 
-            $mail->send(
-                'snowtricks@gmail.com',
-                $user->getEmail(),
-                'SnowTricks - Réinitilisation du mot de passe',
-                'forgot_email',
-                [
-                    'user'=> $user,
-                    'validatedToken'=> $user->getValidatedToken()
-                ]
-            );
+                $this->addFlash(
+                    'success',
+                    "Un email vous a été envoyé pour réinitialiser un mot de passe !"
+                );
+            } else {
 
-            $this->addFlash('success', 
-            "Un email vous a été envoyé pour réinitialiser un mot de passe !"
-            );
-
-
-        } else{
-
-            $this->addFlash('danger', 
-            "Cet utilisateur n'existe pas !"
-            );
+                $this->addFlash(
+                    'danger',
+                    "Cet utilisateur n'existe pas !"
+                );
+            }
         }
 
-        }
+        return $this->render('forgot_password/forgot_password.html.twig', [
+            'forgotForm' => $form->createView(),
+        ]);
+    }
 
-        return $this->render('forgot_password/forgot_email.html.twig', [
-            'controller_name' => 'ForgotPasswordController',
+    #[Route('/forgot/password/{pseudo}/{$resetPasswordToken}', name: 'app_reset_password')]
+    public function resetPassword(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, $pseudo, $resetPasswordToken, EntityManagerInterface $entityManager)
+    {
+        $user = $userRepository->findOneByPseudo($pseudo);
+
+        $form = $this->createForm(ResetPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($user->getResetPasswordToken() !== null && $user->getResetPasswordToken()=== $resetPasswordToken) {
+                $user
+                    ->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $form->get('password')->getData()
+                        )
+                    );
+
+                $user->setResetPasswordToken(null);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash(
+                    'success',
+                    "Votre mot de passe a été changé avec success!"
+                );
+            } else {
+
+                $this->addFlash(
+                    'danger',
+                    "La modification du mot de passe a échoué ! Le lien de validation a expiré !"
+                );
+            }
+        }
+        return $this->render('forgot_password/reset_password.html.twig', [
+            'resetForm' => $form->createView(),
         ]);
     }
 }
