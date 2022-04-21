@@ -53,14 +53,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $validatedToken;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $resetPasswordToken;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Trick::class)]
     private $tricks;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
     private $comments;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+
 
     public function __construct()
     {
@@ -188,6 +190,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getResetPasswordToken(): ?string
+    {
+        return $this->resetPasswordToken;
+    }
+
+    public function setResetPasswordToken(?string $resetPasswordToken): self
+    {
+        $this->resetPasswordToken = $resetPasswordToken;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Trick>
      */
@@ -248,15 +262,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
-    }
+   
 }

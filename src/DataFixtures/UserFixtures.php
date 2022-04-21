@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
         $user->setPseudo($pseudo);
         $user->setEmail($email);
         $user->setAvatar($avatar);
-        $user->setActivated(false);
+        $user->setActivated(1);
         $user->setPassword($this->passwordEncoder->hashPassword($user, $password));
         $user->setValidatedToken(null);
 
