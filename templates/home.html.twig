@@ -1,30 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} SnowTricks{% endblock %}
+{% block title %}
+	SnowTricks
+{% endblock %}
 
 {% block body %}
 
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success" role="alert">{{ message }}</div>
-    {% endfor %}
-    
-<div class="container">
-<div class="card mb-3">
-  <h3 class="card-header text-center">SnowTricks</h3>
-  
- <img src="asset/images/banniere.jpg" class="img-fluid" alt="...">
-    
-</div>
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success" role="alert">{{ message }}</div>
+	{% endfor %}
 
-<figure class="figure">
-  <img
-    src="asset/images/trick-1.jpg"
-    class="figure-img img-fluid rounded shadow-3 mb-2"
-    alt="trick"
-  />
-  <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
-</figure>
+	<h3 class="card-header text-center p-4">SnowTricks</h3>
+		<div class="card mb-3">
+			
+			<img src="asset/images/banniere.jpg" class="img-fluid" alt="...">
 
+		</div>
 
-</div>
+<div class="container p-5">
+		<div class='row' id='trickContainer'>
+
+			{% for trick in tricks %}
+				<div class="col-lg-4 mb-4 trick">
+
+					<div class="carte">
+          
+						<h2>
+							{{ trick.name }} / {{ trick.category.name}}
+						</h2>
+            
+             <a href="" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Voir plus</a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
 {% endblock %}

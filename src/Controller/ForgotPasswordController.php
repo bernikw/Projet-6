@@ -67,42 +67,46 @@ class ForgotPasswordController extends AbstractController
         ]);
     }
 
-    #[Route('/forgot/password/{pseudo}/{$resetPasswordToken}', name: 'app_reset_password')]
-    public function resetPassword(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, $pseudo, $resetPasswordToken, EntityManagerInterface $entityManager)
+
+    #[Route('/reset/password', name: 'app_reset_password')]
+    public function resetPassword(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher,  EntityManagerInterface $entityManager)
     {
-        $user = $userRepository->findOneByPseudo($pseudo);
+
+        $user = $userRepository->findOneBy(['email' => $request->get('email'), 'resetPasswordToken' => $request->get('resetPasswordToken')]);
+
+        if ($user === null) {
+
+            $this->addFlash('danger', 'Cet utilisateur n\'a pas été trouvé');
+
+            return $this->redirectToRoute('app_home');
+        }
 
         $form = $this->createForm(ResetPasswordType::class);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($user->getResetPasswordToken() !== null && $user->getResetPasswordToken()=== $resetPasswordToken) {
-                $user
-                    ->setPassword(
-                        $userPasswordHasher->hashPassword(
-                            $user,
-                            $form->get('password')->getData()
-                        )
-                    );
-
-                $user->setResetPasswordToken(null);
-
-                $entityManager->persist($user);
-                $entityManager->flush();
-
-                $this->addFlash(
-                    'success',
-                    "Votre mot de passe a été changé avec success!"
+            $user
+                ->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
                 );
-            } else {
 
-                $this->addFlash(
-                    'danger',
-                    "La modification du mot de passe a échoué ! Le lien de validation a expiré !"
-                );
-            }
+            $user->setResetPasswordToken(null);
+
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                "Votre mot de passe a été changé avec success!"
+            );
+
+            return $this->redirectToRoute('app_home');
         }
+
         return $this->render('forgot_password/reset_password.html.twig', [
             'resetForm' => $form->createView(),
         ]);
