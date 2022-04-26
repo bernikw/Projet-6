@@ -16,15 +16,25 @@
     
 </div>
 
+
+  <div class='row' id='trickContainer'>
+
+  {% for trick in tricks %}
+
 <figure class="figure">
+  <h2> {{ trick.name }} </h2>
   <img
     src="asset/images/trick-1.jpg"
     class="figure-img img-fluid rounded shadow-3 mb-2"
     alt="trick"
   />
   <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
+
+  <p> {{ trick.content}} </p>
 </figure>
 
 
+ {% endfor %}
+  </div>
 </div>
 {% endblock %}

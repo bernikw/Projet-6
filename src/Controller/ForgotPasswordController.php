@@ -66,6 +66,7 @@ class ForgotPasswordController extends AbstractController
             'forgotForm' => $form->createView(),
         ]);
     }
+    
 
     #[Route('/forgot/password/{pseudo}/{$resetPasswordToken}', name: 'app_reset_password')]
     public function resetPassword(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, $pseudo, $resetPasswordToken, EntityManagerInterface $entityManager)
@@ -73,11 +74,13 @@ class ForgotPasswordController extends AbstractController
         $user = $userRepository->findOneByPseudo($pseudo);
 
         $form = $this->createForm(ResetPasswordType::class);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($user->getResetPasswordToken() !== null && $user->getResetPasswordToken()=== $resetPasswordToken) {
+            if ($user->getResetPasswordToken() === $resetPasswordToken) {
+                
                 $user
                     ->setPassword(
                         $userPasswordHasher->hashPassword(
@@ -95,12 +98,9 @@ class ForgotPasswordController extends AbstractController
                     'success',
                     "Votre mot de passe a été changé avec success!"
                 );
-            } else {
 
-                $this->addFlash(
-                    'danger',
-                    "La modification du mot de passe a échoué ! Le lien de validation a expiré !"
-                );
+                return $this->redirectToRoute('app_login');
+
             }
         }
         return $this->render('forgot_password/reset_password.html.twig', [
