@@ -4,7 +4,8 @@
    <p>Bonjour {{ user.pseudo }}</p>
 
    <p> 
-    <a href="{{ url('app_reset_password', { 'pseudo': user.pseudo, 'resetPasswordToken': user.resetPasswordToken}) }}">Réinitialiser mon mot de passe<a>
+   
+    <a href="{{ url('app_reset_password', { 'email': user.email, 'resetPasswordToken': user.resetPasswordToken}) }}"> Réinitialiser mon mot de passe <a>
 
   </p>
 
