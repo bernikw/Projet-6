@@ -11,27 +11,31 @@
 	{% endfor %}
 
 	<h3 class="card-header text-center p-4">SnowTricks</h3>
-		<div class="card mb-3">
-			
-			<img src="asset/images/banniere.jpg" class="img-fluid" alt="...">
+	<div class="card mb-3">
 
-		</div>
+		<img src="asset/images/banniere.jpg" class="img-fluid" alt="...">
 
-<div class="container p-5">
+	</div>
+
+	<div class="container p-5">
 		<div class='row' id='trickContainer'>
 
 			{% for trick in tricks %}
-				<div class="col-lg-4 mb-4 trick">
-
-					<div class="carte">
-          
-						<h2>
-							{{ trick.name }} / {{ trick.category.name}}
-						</h2>
-            
-             <a href="" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Voir plus</a>
+				
+				<div class="col-4" >
+				<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}">
+					{% for picture in trick.pictures %}
+					<img src="asset/images/{{ picture.filename }}" class="card-img-top" alt="...">
+					{% endfor %}
+					<div class="card-body">
+						<h5 class="card-title">{{ trick.name }}</h5>
+						<p class="card-text">{{ trick.category.name }}</p>
+						<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Voir plus</a>
 					</div>
+					
+					</a>
 				</div>
+
 			{% endfor %}
 		</div>
 	</div>

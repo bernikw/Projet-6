@@ -16,11 +16,15 @@ class TrickController extends AbstractController
         return $this->render('trick/index.html.twig');
     }
 
-    #[Route('/{slug}', name: 'app_detailTrick')]
-    public function detailTrick(Trick $trick)
+    #[Route('/{slug}', name: 'detail')]
+    public function detail(Trick $trick)
     {
-        return $this->render('trick/detailTrick.html.twig', [
+
+        $pictures = $trick->getPictures();
+
+        return $this->render('trick/detail.html.twig', [
             'trick' => $trick,
+            'pictures' => $pictures
         ]);
     }
 }
