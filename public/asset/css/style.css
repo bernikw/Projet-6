@@ -1,35 +1,30 @@
-/*Page accueil*/
+/* Page accueil */
 
 h5
 {
-    color:#45637d;
     text-align: start;
 }
-h2
+h2, h3, h5
 {
-    color:#45637d;
-}
-h3
-{
-    color:#45637d;
+    color: #45637d;
 }
 
 a:link 
 { 
- text-decoration: none;
- display: block;
- font-size: 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 15px;
 }
 
 a:link h5
 { 
- text-decoration: none;
- font-size: 25px;
+    text-decoration: none;
+    font-size: 25px;
 }
 
 a:hover h5
 { 
- color:lightslategray;
+    color:lightslategray;
 }
 
 .bi
