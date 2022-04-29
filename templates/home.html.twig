@@ -10,7 +10,7 @@
 		<div class="alert alert-success" role="alert">{{ message }}</div>
 	{% endfor %}
 
-	<h3 class="card-header text-center p-4">SnowTricks</h3>
+	<h2 class="card-header text-center p-4">SnowTricks</h2>
 	<div class="card mb-3">
 
 		<img src="asset/images/banniere.jpg" class="img-fluid" alt="...">
@@ -20,23 +20,39 @@
 	<div class="container p-5">
 		<div class='row' id='trickContainer'>
 
-			{% for trick in tricks %}
-				
-				<div class="col-4" >
-				<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}">
-					{% for picture in trick.pictures %}
-					<img src="asset/images/{{ picture.filename }}" class="card-img-top" alt="...">
-					{% endfor %}
-					<div class="card-body">
-						<h5 class="card-title">{{ trick.name }}</h5>
-						<p class="card-text">{{ trick.category.name }}</p>
-						<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Voir plus</a>
-					</div>
-					
-					</a>
-				</div>
+			<h3 class="card-header text-center p-4">Figures de SnowTricks</h3>
 
-			{% endfor %}
-		</div>
+			{% for trick in tricks %}
+				<div class="col-4">
+					<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}">
+						{% for picture in trick.pictures %}
+							<img src="asset/images/{{ picture.filename }}" class="card-img-top" alt="...">
+						{% endfor %}
+					</a>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-8">
+								<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}">
+									<h5 class="card-title">{{ trick.name }}</h5>
+								</a>
+							</div>
+							{% if app.user %}
+								<div class="col">
+									<a href="{{ path('app_trick_edit', {slug: trick.slug}) }}">
+										<i class="bi bi-pencil-fill"></i>
+									</a>
+								</div>
+								<div class="col">
+									<a href="{{ path('app_trick_delete', {slug: trick.slug}) }}">
+										<i class="bi bi-trash-fill"></i>
+									</a>
+								</div>
+							{% endif %}
+						</div>
+						<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}" class="btn btn-primary mt-3" style="background-color: #45637d;">Voir plus</a>
+					</div>
+				</a>
+			</div>
+		{% endfor %}
 	</div>
-{% endblock %}
+</div>{% endblock %}
