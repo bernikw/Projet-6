@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ trick.name }}
+{% endblock %}
+
+{% block body %}
+
+	<div class='container my-5'>
+		<div class='row'>
+
+            <div class="col">
+			<h2 class="text-center h2 mb-3 font-weight-normal">
+				{{ trick.name | upper }}</h2>
+            </div>
+
+			{% if app.user %}
+				
+					<div class="col">
+						<a href="{{ path('app_trick_edit', {slug: trick.slug}) }}">
+							<i class="bi bi-pencil-fill"></i>
+						</a>
+					</div>
+					<div class="col">
+						<a href="{{ path('app_trick_delete', {slug: trick.slug}) }}">
+							<i class="bi bi-trash-fill"></i>
+						</a>
+					</div>
+            
+				{% endif %}
+			</div>
+			<div class="col-lg-8 mx-auto">
+				<small>
+					Le
+					{{ trick.createdAt | date('d/m/Y') }}
+					:</small>
+
+				<p>
+					{{ trick.content }}
+				</p>
+
+			</div>
+		</div>
+	</div>
+{% endblock %}

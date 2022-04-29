@@ -1,0 +1,42 @@
+/* Page accueil */
+
+h5
+{
+    text-align: start;
+}
+h2, h3, h5
+{
+    color: #45637d;
+}
+
+a:link 
+{ 
+    text-decoration: none;
+    display: block;
+    font-size: 15px;
+}
+
+a:link h5
+{ 
+    text-decoration: none;
+    font-size: 25px;
+}
+
+a:hover h5
+{ 
+    color:lightslategray;
+}
+
+.bi
+{
+    display: block;
+    font-size: 20px;
+    text-align: center;
+    color: #45637d;
+}
+
+.bi:hover
+{
+    color: lightslategray;
+}
+
