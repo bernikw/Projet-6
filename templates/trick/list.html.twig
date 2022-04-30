@@ -1,11 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TrickController!{% endblock %}
+{% block title %}Trick
+{% endblock %}
 
-	
 
 {% block body %}
 
-<h2> La liste de Tricks</h2>
+	<div class="container p-5">
+		<div class="row">
+			<h2 class="card-header text-center p-4">
+				La liste de Tricks</h2>
+			{% for trick in tricks %}
+				<div class="col-4">
+					<div class="card">
+						<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}">
+							{% for picture in trick.pictures %}
+								<img src="/asset/images/{{ picture.filename }}" class="card-img-top" alt="...">
+							{% endfor %}
+						</a>
+						<div class="card-body">
+							<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}">
+								<h5 class="card-title">{{ trick.name }}</h5>
+							</a>
+							<p class="card-text">{{ trick.content }}</p>
+							
+						</div>
+					</div>
+
+				</div>
+			{% endfor %}
+
+		</div>
+	</div>
 
 {% endblock %}

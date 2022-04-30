@@ -9,6 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
+    /**
+     * This function display homepage
+     * 
+     * @param TrickRepository $trickRepository
+     * @return Response
+     */
+
     #[Route('/', name: 'app_home')]
     public function index(TrickRepository $trickRepository): Response
     {
