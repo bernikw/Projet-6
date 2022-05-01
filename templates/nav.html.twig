@@ -28,6 +28,8 @@
 
       <a href="#" role="button" class="btn btn btn-outline-light px-3 me-2 px-3 me-2">Bienvenue {{ app.user.pseudo}}</a>
 
+       <a href="{{ path('app_trick_app_create')}}" role="button" class="btn btn btn-outline-light px-3 me-2 px-3 me-2">Ajouter un trick</a>
+
       <a href="{{ path('app_logout') }}" role="button" class="btn btn-outline-light px-3 me-2">Me déconnecter</a>
 
       {% else %}
