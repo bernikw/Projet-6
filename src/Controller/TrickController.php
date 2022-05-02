@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
+use App\Entity\Comment;
 use App\Form\TrickType;
+use App\Form\CommentType;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,14 +26,42 @@ class TrickController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'detail')]
-    public function detail(Trick $trick): Response
+    public function detail(Trick $trick, Request $request, EntityManagerInterface $entitymanager): Response
     {
 
         $pictures = $trick->getPictures();
 
+        /* Partie commentaires */
+
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $comment->setCreatedAt(new \DateTimeImmutable);
+            $comment->setUser($this->getUser());
+            $comment->setTrick($trick);
+
+            $entitymanager->persist($comment);
+            $entitymanager->flush();
+
+            $this->addFlash(
+                'success',
+                "Votre message a été posté avec succès"
+            );
+
+            return $this->redirectToRoute('app_trick_detail', [
+                'slug'=> $trick->getSlug()
+            ]);
+
+        }
+
         return $this->render('trick/detail.html.twig', [
             'trick' => $trick,
             'pictures' => $pictures,
+            'commentForm' =>  $form->createView()
         ]);
     }
 
