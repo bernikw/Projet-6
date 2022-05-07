@@ -6,76 +6,102 @@
 
 {% block body %}
 
-	<div class='container my-5'>
-		<div class='row'>
 
-			<div class="col">
+	<div class="container my-5">
+
+		<div class="row d-flex justify-content-center">
+
+			<div class="col-6 my-3">
 				<h2 class="text-center h2 mb-3 font-weight-normal">
 					{{ trick.name }}</h2>
 			</div>
 
 			{% if app.user %}
+				<div class="row col-8 mx-auto mt-4 my-3">
+					<div class="col-lg-8 mx-auto mt-4"></div>
+					<div class="col-1">
+						<a href="{{ path('app_trick_edit', {slug: trick.slug}) }}">
+							<i class="bi bi-pencil-fill"></i>
+						</a>
+					</div>
+					<div class="col-1">
+						<a href="{{ path('app_trick_delete', {slug: trick.slug}) }}">
+							<i class="bi bi-trash-fill"></i>
+						</a>
+					</div>
 
+				{% endif %}
+			</div>
+
+
+			<div class="row">
 				<div class="col">
-					<a href="{{ path('app_trick_edit', {slug: trick.slug}) }}">
-						<i class="bi bi-pencil-fill"></i>
-					</a>
-				</div>
-				<div class="col">
-					<a href="{{ path('app_trick_delete', {slug: trick.slug}) }}">
-						<i class="bi bi-trash-fill"></i>
-					</a>
-				</div>
 
-			{% endif %}
-		</div>
-		<div class="col-lg-8 mx-auto">
-			<small>
-				Le
-				{{ trick.createdAt | date('d/m/Y H:i') }}
-				: {{ trick.user.pseudo }}</small>
-			<p>{{ trick.category.name }}</p>
-			<p>
-				{{ trick.content }}
-			</p>
-
-		</div>
-
-		<div class="form-group row">
-			<div class"col">
-				<div class="col-lg-8 mx-auto">
-					<h5>Liste de commentaires</h5>
-					{% for comment in trick.comments %}
-
-						<p>Publie par: {{ comment.user.pseudo }} le
-							{{ comment.createdAt | date('d/m/Y H:i') }}
-						</p>
-						<p>
-							{{ comment.message }}
-						</p>
-
+					{% for picture in trick.pictures %}
+						<img src="/asset/images/{{ picture.filename }}" class="rounded mx-auto d-block" width="70%" alt="...">
 					{% endfor %}
+
 				</div>
-				{% if app.user %}
+			</div>
 
+			<div class="row col-8 mx-auto mt-4 bg-light">
+				<h5>
+					Le
+					{{ trick.createdAt | date('d/m/Y H:i') }}
+					:
+					{{ trick.user.pseudo }}</h5>
+
+				<h5>Categorie :
+					{{ trick.category.name }}</h5>
+
+			</div>
+
+			<div class="row">
+				<div class="col-8 mx-auto mt-4 mb-1 bg-light">
+					<h5>Description :</h5>
+					{{ trick.content | raw }}
+				</div>
+			</div>
+
+			<div class="row col-8 mx-auto my-5">
+
+
+				{% for video in trick.videos %}
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/{{ video.url }}"></iframe>
+				{% endfor %}
+
+
+			</div>
+
+			<div class="form-group row">
+				<div class"col">
 					<div class="col-lg-8 mx-auto">
-						<h5>Ajouter un commentaire</h5>
+						<h5>Liste de commentaires</h5>
+						{% for comment in trick.comments %}
+							<p><img class="rounded-circle shadow-sm" src="/asset/images/avatar.png" alt="" width="60"/>
+								Publie par:
+								{{ comment.user.pseudo }}
+								le
+								{{ comment.createdAt | date('d/m/Y H:i') }}
+							</p>
 
-						{{ form_start(commentForm) }}
+							<p>
+								{{ comment.message }}
+							</p>
 
-						<div class="mb-3">
-							{{ form(commentForm.message) }}
+						{% endfor %}
+					</div>
+					{% if app.user %}
+
+						<div class="col-lg-8 mx-auto">
+							<h5>Ajouter un commentaire</h5>
+
+							{{ form(commentForm)}}
+								
 							</div>
-
-							<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-								<button type="submit" class="btn btn-xs btn-primary" style="background-color: #45637d;">Envoyer</button>
-							</div>
-
-							{{ form_end(commentForm) }}
-						</div>
-					{% endif %}
+						{% endif %}
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-{% endblock %}
+	{% endblock %}
