@@ -12,16 +12,16 @@ class VideoFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $this->createVideo('https://youtu.be/V9xuy-rVj9w', 'trick1', $manager);
-        $this->createVideo('https://youtu.be/6vA4BuJM3_g', 'trick2', $manager);
-        $this->createVideo('https://youtu.be/_OMar04NRZw', 'trick3', $manager);
-        $this->createVideo('https://youtu.be/9LQkQXMuuUc', 'trick4', $manager);
-        $this->createVideo('https://youtu.be/DO0Xfada_xw', 'trick5', $manager);
-        $this->createVideo('https://youtu.be/-vyWHLblti0', 'trick6', $manager);
-        $this->createVideo('https://youtu.be/sVUnwWhz1x0', 'trick7', $manager);
-        $this->createVideo('https://youtu.be/qsd8uaex-Is', 'trick8', $manager);
-        $this->createVideo('https://youtu.be/_8TBfD5VPnM', 'trick9', $manager);
-        $this->createVideo('https://youtu.be/Dgss7b9quAE', 'trick10', $manager);
+        $this->createVideo('V9xuy-rVj9w', 'trick1', $manager);
+        $this->createVideo('6vA4BuJM3_g', 'trick2', $manager);
+        $this->createVideo('_OMar04NRZw', 'trick3', $manager);
+        $this->createVideo('9LQkQXMuuUc', 'trick4', $manager);
+        $this->createVideo('DO0Xfada_xw', 'trick5', $manager);
+        $this->createVideo('-vyWHLblti0', 'trick6', $manager);
+        $this->createVideo('sVUnwWhz1x0', 'trick7', $manager);
+        $this->createVideo('qsd8uaex-Is', 'trick8', $manager);
+        $this->createVideo('_8TBfD5VPnM', 'trick9', $manager);
+        $this->createVideo('Dgss7b9quAE', 'trick10', $manager);
    
         $manager->flush();
     }
