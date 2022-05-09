@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/trick', name: 'app_trick_')]
 class TrickController extends AbstractController
 {
+    
     #[Route('/', name: 'app_list')]
     public function list(TrickRepository $trickRepository): Response
     {
@@ -27,7 +28,7 @@ class TrickController extends AbstractController
             'tricks' => $trickRepository->findBy([], ['createdAt' => 'DESC'])
         ]);
     }
-
+    
 
     #[Route('/create', name: 'app_create')]
     #[IsGranted('ROLE_USER')]
@@ -75,6 +76,7 @@ class TrickController extends AbstractController
         ]);
     }
 
+
     #[Route('/{slug}', name: 'detail')]
     public function detail(Trick $trick, CommentRepository $commentRepository, Request $request, EntityManagerInterface $entitymanager): Response
     {
@@ -117,6 +119,7 @@ class TrickController extends AbstractController
             ]
         );
     }
+
 
     #[Route('/edit/{slug}', name: 'edit')]
     #[IsGranted('ROLE_USER')]
