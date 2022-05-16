@@ -12,27 +12,35 @@
 
 				<div class="col-lg-8 mx-auto">
 					{{ form_start(trickForm) }}
-				
-				<div class="mb-3">
-					{{ form_row(trickForm.name) }}
-				</div>
-				<div class="mb-3">
-					{{ form_row(trickForm.content) }}
-				</div>
-				<div class="mb-3">
-					{{ form_row(trickForm.category) }}
-				</div>
-				<div class="mb-3">
-					{{ form_row(trickForm.pictures) }}
-				</div>
-				<div class="mb-3">
-					{{ form_row(trickForm.video) }}
-				</div>
-
-				<div class="d-grid gap-2 col-3 mx-auto my-5">
-					<button type="submit" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Ajouter un trick</button>
-				</div>
-				{{ form_end(trickForm) }}
+					<div class="mb-3">
+						{{ form_row(trickForm.name) }}
+					</div>
+					<div class="mb-3">
+						{{ form_row(trickForm.content) }}
+					</div>
+					<p>Ajouter des categories</p>
+					<div class="mb-3">
+						{{ form_row(trickForm.category) }}
+					</div>
+					<p>Ajouter des images</p>
+					<div class="mb-3">
+						{{ form_row(trickForm.pictures) }}
+					</div>
+					<p>Ajouter un video</p>
+					<div class="mb-3">
+						<ul class="videos" data-index="{{ trickForm.videos|length > 0 ? trickForm.videos|last.vars.url + 1 : 0 }}">
+							{% for video in trickForm.videos %}
+								<li>
+									{{ form_row(video.url) }}
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+					
+					<div class="d-grid gap-2 col-3 mx-auto my-5">
+						<button type="submit" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Ajouter un trick</button>
+					</div>
+					{{ form_end(trickForm) }}
 				</div>
 			</div>
 		</div>

@@ -39,13 +39,14 @@ class Trick
     #[ORM\JoinColumn(nullable: false)]
     private $category;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Picture::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Picture::class,cascade: ['persist'], orphanRemoval: true)]
     private $pictures;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, orphanRemoval: true)]
     private $videos;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['createdAt'=> 'DESC'])]
     private $comments;
 
     public function __construct()

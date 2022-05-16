@@ -45,6 +45,26 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
+
+     public function getPaginatedTricks($page, $limit)
+    {
+        $query = $this->createQueryBuilder('t')
+                    ->orderBy('t.createdAt')
+                    ->setFirstResult(($page * $limit) - $limit)
+                    ->setMaxResults($limit);
+
+        return $query->getQuery()->getResult();
+
+    }
+
+    public function getTotalComments()
+    {
+        $query = $this->createQueryBuilder('c')
+                    ->select('COUNT(c)');
+
+        return $query->getQuery->getSingleScalarResult();
+    }
+
     // /**
     //  * @return Trick[] Returns an array of Trick objects
     //  */

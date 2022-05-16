@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Trick
-{% endblock %}
+{% block title %}Trick{% endblock %}
 
 
 {% block body %}
@@ -13,13 +12,21 @@
 			{% for trick in tricks %}
 				<div class="col-4">
 					<div class="card">
-						<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}">
-							{% for picture in trick.pictures %}
+						<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}">
+							{% if trick.pictures | length == 0 %}
+
+							<img src="/asset/images/defaultpicture.jpg" class="card-img-top" alt="...">
+
+						{% endif %}
+						{% for picture in trick.pictures %}
+							{% if picture.main == 1 %}
+
 								<img src="/asset/images/{{ picture.filename }}" class="card-img-top" alt="...">
+							{% endif %}
 							{% endfor %}
 						</a>
 						<div class="card-body">
-							<a href="{{ path('app_trick_detail', {slug: trick.slug}) }}">
+							<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}">
 								<h5 class="card-title">{{ trick.name }}</h5>
 							</a>
 							<p class="card-text">{{ trick.content }}</p>

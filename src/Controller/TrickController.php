@@ -5,10 +5,11 @@ namespace App\Controller;
 use App\Entity\Trick;
 use App\Entity\Comment;
 use App\Entity\Picture;
+use App\Entity\Video;
 use App\Form\TrickType;
 use App\Form\CommentType;
 use App\Repository\TrickRepository;
-use App\Repository\CommentRepository;
+use App\Repository\VideoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/trick', name: 'app_trick_')]
 class TrickController extends AbstractController
 {
-    
+
     #[Route('/', name: 'app_list')]
     public function list(TrickRepository $trickRepository): Response
     {
@@ -28,11 +29,11 @@ class TrickController extends AbstractController
             'tricks' => $trickRepository->findBy([], ['createdAt' => 'DESC'])
         ]);
     }
-    
+
 
     #[Route('/create', name: 'app_create')]
     #[IsGranted('ROLE_USER')]
-    public function create(Request $request, EntityManagerInterface $entitymanager): Response
+    public function create(Request $request, VideoRepository $videoRepository, EntityManagerInterface $entitymanager): Response
     {
         $trick = new Trick();
 
@@ -41,23 +42,37 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-          
+
             $trick->setCreatedAt(new \DateTimeImmutable);
             $trick->setSlug($form->get('name')->getData());
-            $trick->setUser($this->getUser()); 
+            $trick->setUser($this->getUser());
             $pictures = $form->get('pictures')->getData();
+            $videos = $form->get('videos')->getData();
 
-            foreach($pictures as $picture){
- 
-               
-                $file = md5(uniqid()) . '.' .$picture->guessExtension();
+            $isMain = true;
 
-                $picture->move($this->getParameter('images_directory'),
-                $file);
+            foreach ($pictures as $picture) {
+
+                $file = md5(uniqid()) . '.' . $picture->guessExtension();
+
+                $picture->move(
+                    $this->getParameter('images_directory'),
+                    $file
+                );
 
                 $picture = new Picture();
-                $picture->setFilename($file);
+                $picture
+                    ->setFilename($file)
+                    ->setMain($isMain);
+                if ($isMain) {
+                    $isMain = false;
+                }
                 $trick->addPicture($picture);
+            }
+
+            foreach ($videos as $video) {
+                
+                $videoRepository->add($video);
             }
 
             $entitymanager->persist($trick);
@@ -68,7 +83,7 @@ class TrickController extends AbstractController
                 "Votre trick a été posté avec succès"
             );
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('trick/create.html.twig', [
@@ -77,8 +92,8 @@ class TrickController extends AbstractController
     }
 
 
-    #[Route('/{slug}', name: 'detail')]
-    public function detail(Trick $trick, CommentRepository $commentRepository, Request $request, EntityManagerInterface $entitymanager): Response
+    #[Route('/{slug}', name: 'app_detail')]
+    public function detail(Trick $trick, Request $request, EntityManagerInterface $entitymanager): Response
     {
 
         $pictures = $trick->getPictures();
@@ -103,7 +118,7 @@ class TrickController extends AbstractController
                 "Votre message a été posté avec succès"
             );
 
-            return $this->redirectToRoute('app_trick_detail', [
+            return $this->redirectToRoute('app_trick_app_detail', [
                 'slug' => $trick->getSlug()
             ]);
         }
@@ -114,16 +129,36 @@ class TrickController extends AbstractController
                 'trick' => $trick,
                 'pictures' => $pictures,
                 'videos' => $videos,
-                'comments' => $commentRepository->findBy(['trick' => $trick->getId()], ['createdAt' => 'DESC'], 5,),
+                'comments' => $trick->getComments(),
                 'commentForm' => $form->createView()
             ]
         );
     }
 
 
-    #[Route('/edit/{slug}', name: 'edit')]
+    /* #[Route('/comments{slug}', name: 'app_comments')]
+    public function loadComments(CommentRepository $commentRepository, Request $request) 
+    {
+        $limit = 1;
+        $page = (int)$request->query->get("page", 1);
+
+        $comments = $commentRepository->getPaginatedComments($page, $limit);
+
+        $total = $commentRepository->getTotalComments();
+
+        return $this->render('app_trick_detail', [
+            'comments'=> $comments,
+            'total' => $total,
+            'limit' => $limit,
+            'page' => $page
+    ]);
+      
+    }*/
+
+
+    #[Route('/edit/{slug}', name: 'app_edit')]
     #[IsGranted('ROLE_USER')]
-    public function edit(Trick $trick, Request $request, EntityManagerInterface $entitymanager): Response
+    public function edit(Trick $trick, Request $request, VideoRepository $videoRepository, EntityManagerInterface $entitymanager): Response
     {
 
         $form = $this->createForm(TrickType::class, $trick);
@@ -134,6 +169,37 @@ class TrickController extends AbstractController
             $trick->setUpdatedAt(new \DateTimeImmutable);
             $trick->setSlug($form->get('name')->getData());
             $trick->setUser($this->getUser());
+
+            $pictures = $form->get('pictures')->getData();
+
+            foreach ($pictures as $picture) {
+
+                $file = md5(uniqid()) . '.' . $picture->guessExtension();
+
+                $picture->move(
+                    $this->getParameter('images_directory'),
+                    $file
+                );
+
+                $picture = new Picture();
+                $picture->setFilename($file);
+                $trick->addPicture($picture);
+            }
+
+
+
+            $videos = $form->get('videos')->getData();
+
+            foreach ($videos as $video) {
+                if ($video->getUrl() !== null) {
+                    //$videoRepository->add($video);
+                    $video = new Video();
+                    $video->setUrl($video->getUrl());
+                    $entitymanager->persist($video);
+
+                    return $this->redirectToRoute('app_home');
+                }
+            }
 
             $entitymanager->persist($trick);
             $entitymanager->flush();
@@ -147,11 +213,12 @@ class TrickController extends AbstractController
         }
 
         return $this->render('trick/edit.html.twig', [
+            'trick' => $trick,
             'trickForm' => $form->createView()
         ]);
     }
 
-    #[Route('/delete/{slug}', name: 'delete')]
+    #[Route('/delete/{slug}', name: 'app_delete')]
     #[IsGranted('ROLE_USER')]
     public function delete(Trick $trick, EntityManagerInterface $entitymanager): Response
     {
@@ -162,6 +229,18 @@ class TrickController extends AbstractController
             );
         }
 
+        $pictures = $trick->getPictures();
+
+        if ($pictures) {
+            foreach ($pictures as $picture) {
+                $namePicture = $this->getParameter('images_directory') . '/' . $picture->getFilename();
+
+                if (file_exists($namePicture)) {
+                    unlink($namePicture);
+                }
+            }
+        }
+
         $entitymanager->remove($trick);
         $entitymanager->flush();
 
@@ -169,6 +248,51 @@ class TrickController extends AbstractController
             'success',
             'Le trick a bien été supprimé !'
         );
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/delete/picture/{id}', name: 'app_delete_picture')]
+    #[IsGranted('ROLE_USER')]
+    public function deletePicture(Picture $picture, EntityManagerInterface $entitymanager)
+    {
+
+        $picture = $picture->getFilename();
+
+        if (file_exists($picture)) {
+            unlink($this->getParameter('images_directory') . '/' . $picture);
+        }
+
+        $entitymanager->remove($picture);
+        $entitymanager->flush();
+
+        $this->addFlash(
+            'success',
+            'La photo a bien été supprimé !'
+        );
+
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/delete/video/{id}', name: 'app_delete_video')]
+    #[IsGranted('ROLE_USER')]
+    public function deleteVideo(Video $video, EntityManagerInterface $entitymanager)
+    {
+        $video = $video->getUrl();
+
+        if (file_exists($video)) {
+            unlink($this->getParameter('images_directory') . '/' . $video);
+        }
+
+        $entitymanager->remove($video);
+        $entitymanager->flush();
+
+        $this->addFlash(
+            'success',
+            'Le video a bien été supprimé !'
+        );
+
 
         return $this->redirectToRoute('app_home');
     }

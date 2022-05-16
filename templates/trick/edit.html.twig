@@ -9,9 +9,7 @@
 		<div class="form-group row">
 			<div class"col">
 				<h2 class="text-center h3 mb-3 font-weight-normal">SnowTricks - Modifier un trick</h2>
-
 				<div class="col-lg-8 mx-auto">
-                
 					{{ form_start(trickForm) }}
 					<div class="mb-3">
 						{{ form_row(trickForm.name) }}
@@ -21,6 +19,48 @@
 					</div>
 					<div class="mb-3">
 						{{ form_row(trickForm.category) }}
+					</div>
+					
+					<div class="mb-3">
+						{% if app.request.attributes.get('_route') == 'app_trick_app_edit' %}
+							<h3 class="text-center">Images</h3>
+							{% if trick.videos is empty %}
+							<p class="no-content">Pas de photos</p>
+							{% else %}
+							{% for picture in trick.pictures %}
+								<img src="{{ ('/asset/images/' ~ picture.filename)}}" class="rounded mx-auto d-block" width="30%" alt="...">
+								<a href="{{ path('app_trick_app_delete_picture',{id: picture.id }) }}" class="float-right">
+									<i class="bi bi-trash-fill"></i>
+								</a>
+							{% endfor %}
+							{% endif %}
+						{% endif %}
+					</div>
+
+					<div class="mb-3">
+						{{ form_row(trickForm.pictures) }}
+					</div>
+
+					<div class="mb-3">
+					{% if app.request.attributes.get('_route') == 'app_trick_app_edit' %}
+						<h3 class="text-center">Videos</h3>
+						{% if trick.videos is empty %}
+							<p class="no-content">Pas de videos</p>
+						{% else %}
+							{% for video in trick.videos %}
+									<div class="trick-video card-img-top mx-1">
+										<iframe width="30%" src="{{ video.url }}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded mx-auto d-block"></iframe>
+										<a href="{{ path('app_trick_app_delete_video',{id: video.id }) }}" class="float-right">
+									<i class="bi bi-trash-fill"></i>
+								</a>
+									</div>
+							{% endfor %}
+						{% endif %}
+					{% endif %}	
+					</div>
+
+					<div class="mb-3">
+						{{ form_row(trickForm.videos) }}
 					</div>
 
 					<div class="d-grid gap-2 col-3 mx-auto my-5">
