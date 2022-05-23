@@ -2,27 +2,34 @@
 
 namespace App\Controller;
 
-use App\Repository\TrickRepository;
+use App\Entity\Trick;
+use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+ 
 class HomeController extends AbstractController
 {
     /**
      * This function display homepage
      * 
-     * @param TrickRepository $trickRepository
      * @return Response
      */
 
+
     #[Route('/', name: 'app_home')]
-    public function index(TrickRepository $trickRepository): Response
+    public function index(Request $request, PaginationService $pagination): Response
     {
-             
+        $page = $request->query->getInt('page', 1);  
+        $pagination->createPagination(Trick::class, [], ['createdAt'=> 'DESC'], $page, 10);
+
         return $this->render('home.html.twig', [
-            'tricks' => $trickRepository->findBy([], ['createdAt'=> 'DESC'], 10)
-    
+            'tricks' => $pagination->getData(),
+            'nextPage' => $pagination->nextPage()
+
         ]);
     }
+   
 }

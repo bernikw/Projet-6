@@ -12,29 +12,63 @@
 
 				<div class="col-lg-8 mx-auto">
 					{{ form_start(trickForm) }}
-				
-				<div class="mb-3">
-					{{ form_row(trickForm.name) }}
-				</div>
-				<div class="mb-3">
-					{{ form_row(trickForm.content) }}
-				</div>
-				<div class="mb-3">
-					{{ form_row(trickForm.category) }}
-				</div>
-				<div class="mb-3">
-					{{ form_row(trickForm.pictures) }}
-				</div>
-				<div class="mb-3">
-					{{ form_row(trickForm.video) }}
-				</div>
+					<div class="mb-3">
+						{{ form_row(trickForm.name) }}
+					</div>
+					<div class="mb-3">
+						{{ form_row(trickForm.content) }}
+					</div>
 
-				<div class="d-grid gap-2 col-3 mx-auto my-5">
-					<button type="submit" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Ajouter un trick</button>
-				</div>
-				{{ form_end(trickForm) }}
+					<p>Ajouter des categories</p>
+					<div class="mb-3">
+						{{ form_row(trickForm.category) }}
+					</div>
+
+					<p>Ajouter des images</p>
+					<div class="mb-3">
+						{{ form_row(trickForm.pictures) }}
+					</div>
+
+					<p>Ajouter un video</p>
+
+					<button type="button" class="add_link_video" data-collection-holder-class="video">Ajouter un video</button>
+					<div id="videos" class="videos" data-prototype="{{ form_row(trickForm.videos.vars.prototype)|e('html_attr') }}">
+						
+						{{ form_row(trickForm.videos) }}
+							<span></span>
+				
+					</div>
+					
+					<div class="d-grid gap-2 col-3 mx-auto my-5">
+						<button type="submit" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Ajouter un trick</button>
+					</div>
+					{{ form_end(trickForm) }}
 				</div>
 			</div>
 		</div>
 	</section>
 {% endblock %}
+{% block javascript %}
+<script>
+
+let collection, boutonAjout, span;
+
+window.onload = () => {
+ collection = document.querySelector("#videos");
+ li = collection.querySelector("span");
+
+
+ boutonAjout = document.createElement("button");
+	boutonAjout.className = "ajout-video";
+	boutonAjout.InnerText = "Ajouter un video";
+
+	let nouveauBouton = span.append(boutonAjout);
+
+}
+
+</script>
+
+
+{% endblock %}
+
+
