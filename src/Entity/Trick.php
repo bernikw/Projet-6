@@ -7,6 +7,7 @@ use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 class Trick
@@ -20,6 +21,7 @@ class Trick
     private $id;
 
     #[ORM\Column(type: 'string', length: 100, unique: true)]
+    #[Assert\NotBlank(message: 'Veuillez saisir un nom')]
     private $name;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -29,6 +31,8 @@ class Trick
     private $updatedAt;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'Ce champs ne peut pas être vide')]
+    #[Assert\Length(min:30)]
     private $content;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]

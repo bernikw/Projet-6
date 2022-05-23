@@ -9,11 +9,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Image;
 
 class TrickType extends AbstractType
 {
@@ -45,9 +45,11 @@ class TrickType extends AbstractType
                 'required' => false,
                 
             ])
+            
             ->add('videos', CollectionType::class, [
+                'required' => false,
                 'entry_type' => VideoType::class,
-                'label' => false,
+                'entry_options'=>['label' => false],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -17,6 +19,8 @@ class Comment
     private $createdAt;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'Ce message ne peut pas être vide')]
+    #[Assert\Length(min:10)]
     private $message;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]

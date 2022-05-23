@@ -40,13 +40,9 @@
 					{% endif %}
 
 					{% for picture in trick.pictures %}
-
 						{% if picture.main == 1 %}
-
-							<img src="/asset/images/{{ picture.filename }}" class="rounded mx-auto d-block" width="70%" alt="...">
-
+							<img src="{{'/asset/images/' ~ picture.filename }}" class="rounded mx-auto d-block" width="70%" alt="...">
 						{% endif %}
-
 					{% endfor %}
 
 				</div>
@@ -63,6 +59,19 @@
 				<div class="col-8 mx-auto mt-4 mb-1 bg-light">
 					<h5>Description :</h5>
 					{{ trick.content | raw }}
+				</div>
+			</div>
+			<div class="row row col-8 mx-auto mt-4 content-center m-1">
+				<h5>Photos du trick</h5>
+				<div class="col-12 col-lg-6 photos-container d-flex">
+					{% for picture in trick.pictures %}
+						{% if picture.main == 1 %}
+							<i class="bi bi-check"></i>
+							<img class="trick-photo card-img-top mx-1" src="{{ ('/asset/images/') ~ picture.filename }}" class="rounded">
+						{% else %}
+							<img class="trick-photo card-img-top mx-1" src="{{ ('/asset/images/') ~ picture.filename }}" class="rounded">
+						{% endif %}
+					{% endfor %}
 				</div>
 			</div>
 
