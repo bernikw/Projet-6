@@ -63,7 +63,7 @@
 			</div>
 			<div class="row row col-8 mx-auto mt-4 content-center m-1">
 				<h5>Photos du trick</h5>
-				<div class="col-12 col-lg-6 photos-container d-flex">
+				<div class="col-lg-6 photos-container d-flex">
 					{% for picture in trick.pictures %}
 						{% if picture.main == 1 %}
 							<i class="bi bi-check"></i>
@@ -95,6 +95,11 @@
 								{{ comment.message }}</p>
 						{% endfor %}
 					</div>
+	{% if nextPage %}
+	<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
+		<a href="" id="moreComments" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus commentaires</a>
+	</div>
+	{% endif %}
 
 					{% if app.user %}
 						<div class="col-lg-8 mx-auto">

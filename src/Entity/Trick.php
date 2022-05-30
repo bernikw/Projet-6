@@ -7,9 +7,11 @@ use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
+#[UniqueEntity(fields:['name'], message: 'Cette figure existe déjà')]
 class Trick
 {
 
@@ -32,7 +34,7 @@ class Trick
 
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank(message: 'Ce champs ne peut pas être vide')]
-    #[Assert\Length(min:30)]
+    #[Assert\Length(min:20)]
     private $content;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
