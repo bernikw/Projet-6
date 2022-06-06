@@ -46,8 +46,7 @@ class TrickType extends AbstractType
                 
             ])
             
-            ->add('videos', CollectionType::class, [
-                'required' => false,
+            ->add('videos', CollectionType::class, [       
                 'entry_type' => VideoType::class,
                 'label' => false,
                 'allow_add' => true,

@@ -6,110 +6,146 @@
 
 {% block body %}
 
-	<div class="container my-5">
-		<div class="row d-flex justify-content-center">
+	<div class="container my-3">
+		<section class="heading">
+			<div class="row d-flex justify-content-center">
+				<div class="col-8 my-3">
+					<h2 class="text-center h2 mb-3 font-weight-normal">
+						{{ trick.name }}</h2>
+				</div>
 
-			<div class="col-6 my-3">
-				<h2 class="text-center h2 mb-3 font-weight-normal">
-					{{ trick.name }}</h2>
-			</div>
-
-			{% if app.user %}
-				<div class="row col-8 mx-auto mt-4 my-3">
-					<div class="col-lg-8 mx-auto mt-4"></div>
-					<div class="col-1">
-						<a href="{{ path('app_trick_app_edit', {slug: trick.slug}) }}">
-							<i class="bi bi-pencil-fill"></i>
-						</a>
+				{% if app.user %}
+					<div class="row col-10 mx-auto mt-4 my-3">
+						<div class="d-flex justify-content-end">
+							<a href="{{ path('app_trick_app_edit', {slug: trick.slug}) }}">
+								<i class="bi bi-pencil-fill"></i>
+							</a>
+							<a href="{{ path('app_trick_app_delete', {slug: trick.slug}) }}">
+								<i class="bi bi-trash-fill"></i>
+							</a>
+						</div>
 					</div>
-					<div class="col-1">
-						<a href="{{ path('app_trick_app_delete', {slug: trick.slug}) }}">
-							<i class="bi bi-trash-fill"></i>
-						</a>
-					</div>
-
 				{% endif %}
-			</div>
-			<div class="row">
-				<div class="col">
-
+				<div class="row col-lg-10 col-md-10 col-ms-10 d-flex justify-content-center">
 					{% if trick.pictures | length == 0 %}
-
-						<img src="/asset/images/defaultpicture.jpg" class="rounded mx-auto d-block" width="70%" alt="...">
-
+						<img src="/asset/images/defaultpicture.jpg" class="rounded mx-auto d-block" width="85%" alt="...">
 					{% endif %}
-
 					{% for picture in trick.pictures %}
 						{% if picture.main == 1 %}
-							<img src="{{'/asset/images/' ~ picture.filename }}" class="rounded mx-auto d-block" width="70%" alt="...">
-						{% endif %}
-					{% endfor %}
-
-				</div>
-			</div>
-			<div class="row col-8 mx-auto mt-4 bg-light">
-				<h5>
-					Le
-					{{ trick.createdAt | date('d/m/Y H:i') }}:
-					{{ trick.user.pseudo }}</h5>
-				<h5>Categorie :
-					{{ trick.category.name }}</h5>
-			</div>
-			<div class="row">
-				<div class="col-8 mx-auto mt-4 mb-1 bg-light">
-					<h5>Description :</h5>
-					{{ trick.content | raw }}
-				</div>
-			</div>
-			<div class="row row col-8 mx-auto mt-4 content-center m-1">
-				<h5>Photos du trick</h5>
-				<div class="col-lg-6 photos-container d-flex">
-					{% for picture in trick.pictures %}
-						{% if picture.main == 1 %}
-							<i class="bi bi-check"></i>
-							<img class="trick-photo card-img-top mx-1" src="{{ ('/asset/images/') ~ picture.filename }}" class="rounded">
-						{% else %}
-							<img class="trick-photo card-img-top mx-1" src="{{ ('/asset/images/') ~ picture.filename }}" class="rounded">
+							<img src="{{'/asset/images/' ~ picture.filename }}" class="rounded mx-auto d-block" width="85%" alt="...">
 						{% endif %}
 					{% endfor %}
 				</div>
-			</div>
+			</section>
+		</div>
 
-			<div class="row col-8 mx-auto my-5">
-				{% for video in trick.videos | reverse %}
-					<iframe width="560" height="315" src="https://www.youtube.com/embed/{{ video.url }}"></iframe>
-				{% endfor %}
-			</div>
-			<div class="form-group row">
-				<div class"col">
-					<div class="col-lg-8 mx-auto">
-						<h5>Liste de commentaires</h5>
+		<!--Section Media-->
 
-						{% for comment in trick.comments %}
-							<p><img class="rounded-circle shadow-sm" src="/asset/images/avatar.png" alt="" width="60"/>
-								Publie par:
-								{{ comment.user.pseudo }}
-								le
-								{{ comment.createdAt | date('d/m/Y H:i') }}</p>
-							<p>
-								{{ comment.message }}</p>
-						{% endfor %}
-					</div>
-	{% if nextPage %}
-	<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
-		<a href="" id="moreComments" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus commentaires</a>
-	</div>
-	{% endif %}
-
-					{% if app.user %}
-						<div class="col-lg-8 mx-auto">
-							<h5>Ajouter un commentaire</h5>
-							{{ form(commentForm)}}
-							</div>
-						{% endif %}
-
-					</div>
+		<div class="row d-none d-lg-flex justify-content-center loadMedia">
+			<div class="carousel col-lg-6 col-md-6 col-ms-6" id="carousel-v" data-ride="carousel">
+				<ol class="carousel-indicators">
+					{% for picture in trick.pictures %}
+						<li data-target=".carousel" data-slide-to="{{ loop.index0 }}" {% if loop.index0 == 0 %} class="active" {% endif %}></li>
+					{% endfor %}
+				</ol>
+				<div class="carousel-inner enlarge">
+					{% for picture in trick.pictures %}
+						<div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
+							<img src="{{ ('/asset/images/') ~ picture.filename }}" alt="{{ trick.name }}-picture-{{ picture.id }}" class="rounded d-block"/>
+						</div>
+					{% endfor %}
 				</div>
+				<a class="carousel-control-prev" href="#carousel-v" data-mdb-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+
+				</a>
+				<a class="carousel-control-next" href="#carousel-v" data-mdb-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				</a>
+
+			</div>
+			<div class="carousel col-lg-6 col-md-6 col-ms-6 loadMedia" id="carousel-v" data-ride="carousel">
+				<ol class="carousel-indicators">
+					{% for video in trick.videos %}
+						<li data-target="#carousel-v" data-slide-to="{{ loop.index0 }}" {% if loop.index0 == 0 %} class="active" {% endif %}></li>
+					{% endfor %}
+				</ol>
+				<div class="carousel-inner">
+					{% for video in trick.videos %}
+						<div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
+							<iframe src="https://www.youtube.com/embed/{{ video.url }}" class="rounded d-block"></iframe>
+						</div>
+					{% endfor %}
+				</div>
+				<a class="carousel-control-prev" href="#carousel-v" data-mdb-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				</a>
+				<a class="carousel-control-next" href="#carousel-v" data-mdb-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				</a>
 			</div>
 		</div>
-	{% endblock %}
+		<div class="text-center">
+			<a href="#loadMedia" id="loadMedia" class="d-md-block d-lg-none">
+				<button class="btn btn-primary" style="background-color: #45637d;">Afficher les médias</button>
+			</a>
+		</div>
+
+		<!--Section description-->
+		<section class="description">
+			<div class="row">
+				<div class="col-8 mx-auto mt-4 bg-light">
+					<h5>
+						Par:{{ trick.user.pseudo }}|
+																																				Crée:{{ trick.createdAt | date('d/m/Y H:i') }}: |
+																																				Modifiée:{{ trick.updatedAt | date('d/m/Y H:i') }}:
+					</h5>
+					<h5>Categorie :
+						{{ trick.category.name }}</h5>
+				</section>
+
+
+				<section class="content">
+					<div class="row">
+						<div class="col-8 mx-auto mt-4 bg-light">
+							<h5>Description :</h5>
+							{{ trick.content }}
+						</div>
+					</div>
+				</section>
+
+				<section class="container comments ">
+					<div class="row col-8 mx-auto mt-4 content-center">
+
+						{% if app.user %}
+							<hr class="my-4">
+							<div class="col-lg-6 col-sm-10 mx-auto">
+								<h5>Ajouter un commentaire</h5>
+								{{ form(commentForm)}}
+								</div>
+
+							{% endif %}
+
+							<hr class="my-4">
+							<div class="col-lg-6 col-sm-10 mx-auto">
+								<h5>Liste de commentaires</h5>
+
+								{% for comment in comments %}
+									<p><img class="rounded-circle shadow-sm" src="/asset/images/avatar.png" alt="" width="60"/>
+										Publie par:
+										{{ comment.user.pseudo }}
+										le
+										{{ comment.createdAt | date('d/m/Y H:i') }}</p>
+									<p>{{ comment.message }}</p>
+								{% endfor %}
+
+								{% if nextPage %}
+									<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
+										<a href="" id="moreComments" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus commentaires</a>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</section>
+
+				{% endblock %}

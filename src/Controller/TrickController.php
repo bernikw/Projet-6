@@ -49,7 +49,8 @@ class TrickController extends AbstractController
             $trick->setSlug($form->get('name')->getData());
             $trick->setUser($this->getUser());
             $pictures = $form->get('pictures')->getData();
-           
+            
+
             $isMain = true;
 
             foreach ($pictures as $picture) {
@@ -68,10 +69,11 @@ class TrickController extends AbstractController
                     $isMain = false;
                 }
                 $trick->addPicture($picture);
+            }  
+            
+            foreach ($trick->getVideos() as $video) {
+                $video->setTrick($trick);
             }
-
-            $video = new Video();
-            $trick->addVideo($video);
 
             $entitymanager->persist($trick);
             $entitymanager->flush();
@@ -81,7 +83,7 @@ class TrickController extends AbstractController
                 "Votre trick a été posté avec succès"
             );
 
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('trick/create.html.twig', [
@@ -94,8 +96,6 @@ class TrickController extends AbstractController
     public function detail(Trick $trick, Request $request, EntityManagerInterface $entitymanager, PaginationService $pagination): Response
     {
 
-        $page = $request->query->getInt('page', 1);  
-        $pagination->createPagination(Comment::class, [], ['createdAt'=> 'DESC'], $page, 1);
 
         $comment = new Comment();
 
@@ -121,7 +121,9 @@ class TrickController extends AbstractController
             ]);
         }
 
-       
+        $page = $request->query->getInt('page', 1);  
+        $pagination->createPagination(Comment::class, [], ['createdAt'=> 'DESC'], $page, 1);
+
         return $this->render(
             'trick/detail.html.twig',
             [
@@ -163,9 +165,9 @@ class TrickController extends AbstractController
                 $trick->addPicture($picture);
             }
  
-            $video = new Video;   
-            $videoRepository->add($video);
-                   
+            foreach ($trick->getVideos() as $video) {
+                $video->setTrick($trick);
+            }    
 
             $entitymanager->persist($trick);
             $entitymanager->flush();
@@ -244,28 +246,30 @@ class TrickController extends AbstractController
 
     #[Route('/main/picture/{id}', name: 'app_main_picture')]
     #[IsGranted('ROLE_USER')]
-    public function isMain(Picture $picture, EntityManagerInterface $entitymanager)
+    public function isMain(Picture $picture, TrickRepository $trickRepository, EntityManagerInterface $entitymanager)
     {
-     
-     
+       
+       
+       
 
-        $file = $picture->getFilename();
+//dd( $picture->getTrick()->getPictures());
+
+       $file = $picture->getFilename();
             
-        if($picture->getMain() == 0 )
+      if($picture->getMain() == 0 )
         {     
           
             $picture->setFilename($file);
             $picture->setMain(1);
         
         }
-        
-        
+       
         $entitymanager->persist($picture);
         $entitymanager->flush();
 
         $this->addFlash(
             'success',
-            "Cet photo est devenue le photo "
+            "Cet photo est devenue le photo main"
         );
 
         return $this->redirectToRoute('app_home');
@@ -287,6 +291,6 @@ class TrickController extends AbstractController
         );
 
 
-        return $this->redirectToRoute('app_edit');
+        return $this->redirectToRoute('app_home');
     }
 }

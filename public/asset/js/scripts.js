@@ -1,6 +1,6 @@
 const addVideoFormDeleteLink = (item) => {
     const removeFormButton = document.createElement('button');
-    removeFormButton.innerText = 'X';
+    removeFormButton.innerText = 'Supprimer';
 
     item.append(removeFormButton);
 
@@ -49,3 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("salut");
     collectionHelper();
 });
+
+
+$(document).ready(function () {
+    $(".enlarge").on("click", function () {
+        $(this).toggleClass("clic-picture");
+    });
+});
+
+$(function () {
+    $("#loadMedia").on("click", function (e) {
+        e.preventDefault();
+        $("div.loadMedia").removeClass("d-none");
+        $("#loadMedia").addClass("d-none");     
+    });

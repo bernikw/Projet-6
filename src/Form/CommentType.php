@@ -22,7 +22,7 @@ class CommentType extends AbstractType
             ])
             ->add('submit', SubmitType::class,[
                 'attr' => [
-                    'class' => 'btn btn-xs btn-primary'
+                    'class' => 'btn btn-secondary mt-2'
                 ],
                 'label' => 'Envoyer'
             ]);     

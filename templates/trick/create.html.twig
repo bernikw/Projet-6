@@ -18,27 +18,19 @@
 					<div class="mb-3">
 						{{ form_row(trickForm.content) }}
 					</div>
-
-					<p>Ajouter des categories</p>
 					<div class="mb-3">
 						{{ form_row(trickForm.category) }}
-					</div>
-
-					<p>Ajouter des images</p>
+					</div>				
 					<div class="mb-3">
 						{{ form_row(trickForm.pictures) }}
 					</div>
-
-					<p>Ajouter un video</p>
-
-					<button type="button" class="add_link_video" data-collection-holder-class="video">Ajouter un video</button>
-					<ul id="videos" class="videos" data-prototype="{{ form_widget(trickForm.videos.vars.prototype)|e('html_attr') }}">
-						
-						
-							<li> {{ form_row(trickForm.videos) }} </li>
-				
-					</ul>
 					
+					<button type="button" class="add_link_video" data-collection-holder-class="videos">Ajouter un video</button>
+					<ul class="videos" data-index="{{ trickForm.videos|length > 0 ? trickForm.videos|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(trickForm.videos.vars.prototype)|e('html_attr') }}">					
+						<li>
+							{{ form_row(trickForm.videos) }}
+						</li>					
+					</ul>
 					<div class="d-grid gap-2 col-3 mx-auto my-5">
 						<button type="submit" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Ajouter un trick</button>
 					</div>
@@ -48,6 +40,3 @@
 		</div>
 	</section>
 {% endblock %}
-
-
-

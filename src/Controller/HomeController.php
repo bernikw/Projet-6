@@ -24,6 +24,7 @@ class HomeController extends AbstractController
     { 
         $page = $request->query->getInt('page', 1);  
         $pagination->createPagination(Trick::class, [], ['createdAt'=> 'DESC'], $page, 15);
+        
 
         return $this->render('home.html.twig', [
             'tricks' => $pagination->getData(),

@@ -59,33 +59,29 @@
 
 					<div class="mb-3">
 						{% if app.request.attributes.get('_route') == 'app_trick_app_edit' %}
+
+							<button type="button" class="add_link_video" data-collection-holder-class="videos">Ajouter un video</button>
+
+							<ul class="videos" data-index="{{ trickForm.videos|length > 0 ? trickForm.videos|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(trickForm.videos.vars.prototype)|e('html_attr') }}">
+
+								<li>
+									{{ form_row(trickForm.videos) }}
+								</li>
+
+							</ul>
+
 							<h3 class="text-center">Videos</h3>
-							{% if trick.videos is empty %}
-								<p class="no-content">Pas de videos</p>
-							{% else %}
-								<button type="button" class="add_item_link" data-collection-holder-class="tags">Ajouter un video</button>
+							{% for video in trick.videos %}
+								<div class="trick-video card-img-top mx-1">
 
-								<ul class="videos" data-prototype="{{ form_row(trickForm.videos.vars.prototype)|e('html_attr') }}">
-									{% for video in trickForm.videos %}
-										<li>
-											{{ form_row(video.url) }}
-										</li>
+									<iframe width="30%" src="https://www.youtube.com/embed/{{ video.url }}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded mx-auto d-block"></iframe>
+									<a href="{{ path('app_trick_app_delete_video',{id: video.id }) }}" class="float-right">
+										<i class="bi bi-trash-fill"></i>
+									</a>
 
-									{% endfor %}
+								</div>
+							{% endfor %}
 
-
-									{% for video in trick.videos %}
-										<div class="trick-video card-img-top mx-1">
-
-											<iframe width="30%" src="{{ video.url }}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded mx-auto d-block"></iframe>
-											<a href="{{ path('app_trick_app_delete_video',{id: video.id }) }}" class="float-right">
-												<i class="bi bi-trash-fill"></i>
-											</a>
-
-										</div>
-									{% endfor %}
-								</ul>
-							{% endif %}
 						{% endif %}
 					</div>
 

@@ -71,10 +71,12 @@
 		</div>
 	</div>
 
-  {% if tricks %}
+ 
+  {% if nextPage  %}
 	<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
 		<a href="{{ path('app_home', {page: nextPage}) }}" id="moreTricks" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus tricks</a>
 	</div>
+	</ul>
 	{% endif %}
 	
 	<div class="d-grid gap-2 d-md-flex justify-content-md-end">
