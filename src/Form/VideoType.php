@@ -16,16 +16,10 @@ class VideoType extends AbstractType
     {
         $builder
             ->add('url', UrlType::class,[
-                'label' => false,
                 'attr' => [
                     'placeholder' => 'Insérer l\'URL de la vidéo',
                 ],
-                'constraints' => [
-                    new Regex([
-                        'pattern' => '#^((?:https?:)?\/\/)?(?:www\.)?((?:youtube\.com|youtu\.be|dai\.ly|dailymotion\.com|vimeo\.com|player\.vimeo\.com))(\/(?:[\w\-]+\?v=|embed\/|video\/|embed\/video\/)?)([\w\-]+)(\S+)?$#',
-                        'message' => 'Tu peux télécharger youtube, dailymotion ou vimeo video url',
-                    ])
-                ],
+                
             ])
         ;
     }

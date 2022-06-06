@@ -11,6 +11,7 @@ use App\Form\CommentType;
 use App\Service\PaginationService;
 use App\Repository\TrickRepository;
 use App\Repository\VideoRepository;
+use App\Repository\PictureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,7 +35,7 @@ class TrickController extends AbstractController
 
     #[Route('/create', name: 'app_create')]
     #[IsGranted('ROLE_USER')]
-    public function create(Request $request, VideoRepository $videoRepository, EntityManagerInterface $entitymanager): Response
+    public function create(Request $request, EntityManagerInterface $entitymanager): Response
     {
         $trick = new Trick();
 
@@ -48,7 +49,7 @@ class TrickController extends AbstractController
             $trick->setSlug($form->get('name')->getData());
             $trick->setUser($this->getUser());
             $pictures = $form->get('pictures')->getData();
-            $videos = $form->get('videos')->getData();
+            
 
             $isMain = true;
 
@@ -68,15 +69,10 @@ class TrickController extends AbstractController
                     $isMain = false;
                 }
                 $trick->addPicture($picture);
-            }
-
-            foreach ($videos as $video) {
-                if ($video->getUrl() !== null) {
-                    //$videoRepository->add($video);
-                    $video = new Video();
-                    $video->setUrl($video->getUrl());
-                    $entitymanager->persist($video);
-                }
+            }  
+            
+            foreach ($trick->getVideos() as $video) {
+                $video->setTrick($trick);
             }
 
             $entitymanager->persist($trick);
@@ -87,7 +83,7 @@ class TrickController extends AbstractController
                 "Votre trick a été posté avec succès"
             );
 
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('trick/create.html.twig', [
@@ -99,6 +95,7 @@ class TrickController extends AbstractController
     #[Route('/{slug}', name: 'app_detail')]
     public function detail(Trick $trick, Request $request, EntityManagerInterface $entitymanager, PaginationService $pagination): Response
     {
+
 
         $comment = new Comment();
 
@@ -167,19 +164,10 @@ class TrickController extends AbstractController
                 $picture->setMain(false);
                 $trick->addPicture($picture);
             }
-
-            $videos = $form->get('videos')->getData();
-
-            foreach ($videos as $video) {
-                if ($video->getUrl() !== null) {
-                    //$videoRepository->add($video);
-                    $video = new Video();
-                    $video->setUrl($video->getUrl());
-                    $entitymanager->persist($video);
-
-                    return $this->redirectToRoute('app_home');
-                }
-            }
+ 
+            foreach ($trick->getVideos() as $video) {
+                $video->setTrick($trick);
+            }    
 
             $entitymanager->persist($trick);
             $entitymanager->flush();
@@ -258,26 +246,23 @@ class TrickController extends AbstractController
 
     #[Route('/main/picture/{id}', name: 'app_main_picture')]
     #[IsGranted('ROLE_USER')]
-    public function isMain(Picture $picture, EntityManagerInterface $entitymanager)
+    public function isMain(Picture $picture, PictureRepository $pictureRepository, EntityManagerInterface $entitymanager)
     {
-    
-        $file = $picture->getFilename();
-            
-        if($picture->getMain() == 0 )
-        {     
-          
-            $picture->setFilename($file);
-            $picture->setMain(1);
-        
+       
+       $pictures = $pictureRepository->findBy(['trick'=> $picture->getTrick()]);
+       foreach ($pictures as $image) {
+        $image->setMain(0);
+
         }
-        
-        
+            
+            $picture->setMain(1);      
+       
         $entitymanager->persist($picture);
         $entitymanager->flush();
 
         $this->addFlash(
             'success',
-            "Cet photo est devenue le photo "
+            "Cet photo est devenue le photo main"
         );
 
         return $this->redirectToRoute('app_home');
@@ -288,18 +273,14 @@ class TrickController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function deleteVideo(Video $video, EntityManagerInterface $entitymanager)
     {
-        $video = $video->getUrl();
-
-        if (file_exists($video)) {
-            unlink($this->getParameter('images_directory') . '/' . $video);
-        }
-
+        
+      
         $entitymanager->remove($video);
         $entitymanager->flush();
 
         $this->addFlash(
             'success',
-            'Le video a bien été supprimé !'
+            'La video a bien été supprimé !'
         );
 
 

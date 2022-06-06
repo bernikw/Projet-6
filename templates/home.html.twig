@@ -7,7 +7,7 @@
 {% block body %}
 	<div class="container">
 		<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-			<a href="#tricks">
+			<a href="#tricks-list">
 				<i class="bi bi-arrow-down-square" style="font-size: 2rem; color: #45637d;"></i>
 			</a>
 		</div>
@@ -17,18 +17,20 @@
 		<div class="alert alert-success" role="alert">{{ message }}</div>
 	{% endfor %}
 
-	<div class="card mb-3">
+	<div class="card">
 		<h2 class="card-header text-center p-4">SnowTricks</h2>
 		<img src="asset/images/banniere.jpg" class="img-fluid" alt="...">
 	</div>
 
-	<div class="container p-5">
-		<div class='row' id='trickContainer'>
-			<h3 class="card-header text-center p-4">Figures de SnowTricks</h3>
 
+	<div class="container p-5" id="tricks-list">
+
+		<div class="row align-items-start ">
+			<h3 class="card-header text-center p-4">Figures de SnowTricks</h3>
 			{% for trick in tricks %}
-				<div class="col-4">
+				<div class="col-lg-4 col-sm-6">
 					<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}">
+
 						{% if trick.pictures | length == 0 %}
 
 							<img src="/asset/images/defaultpicture.jpg" class="card-img-top" alt="...">
@@ -42,7 +44,7 @@
 						{% endfor %}
 					</a>
 					<div class="card-body">
-						<div class="row">
+						<div class="row align-items-start ">
 							<div class="col-8">
 								<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}">
 									<h5 class="card-title">{{ trick.name }}</h5>
@@ -62,16 +64,23 @@
 							{% endif %}
 						</div>
 						<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}" class="btn btn-primary mt-3" style="background-color: #45637d;">Voir plus</a>
+
 					</div>
-				</a>
-			</div>
-		{% endfor %}
+				</div>
+			{% endfor %}
+		</div>
 	</div>
+
+ 
+  {% if nextPage  %}
 	<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
-		<button class="btn btn-primary mt-3" style="background-color: #45637d;">Plus tricks</button>
+		<a href="{{ path('app_home', {page: nextPage}) }}" id="moreTricks" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus tricks</a>
 	</div>
+	</ul>
+	{% endif %}
+	
 	<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-		<a href="#tricks">
+		<a href="#tricks-list">
 			<i class="bi bi-arrow-up-square" style="font-size: 2rem; color: #45637d;"></i>
 		</a>
 	</div>

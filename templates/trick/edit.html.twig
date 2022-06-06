@@ -30,14 +30,24 @@
 							{% else %}
 
 								{% for picture in trick.pictures %}
-									<img src="{{ ('/asset/images/' ~ picture.filename)}}" class="rounded mx-auto d-block" width="30%" alt="...">
-									<a href="{{ path('app_trick_app_main_picture',{id: picture.id }) }}" class="float-right">
-										<i class="bi bi-check-square">Main Photo</i>
-									</a>
-									<a href="{{ path('app_trick_app_delete_picture',{id: picture.id }) }}" class="float-right">
-										<i class="bi bi-trash-fill">
-											Supprimer</i>
-									</a>
+									{% if picture.main == 1 %}
+										<img src="{{ ('/asset/images/' ~ picture.filename)}}" class="rounded mx-auto d-block" width="30%" alt="...">
+										<a href="{{ path('app_trick_app_delete_picture',{id: picture.id }) }}" class="float-right">
+											<i class="bi bi-trash-fill">
+												Supprimer</i>
+										</a>
+
+									{% else %}
+
+										<img src="{{ ('/asset/images/' ~ picture.filename)}}" class="rounded mx-auto d-block" width="30%" alt="...">
+										<a href="{{ path('app_trick_app_main_picture',{id: picture.id }) }}" class="float-right">
+											<i class="bi bi-check-square">Mettre comme principal</i>
+										</a>
+										<a href="{{ path('app_trick_app_delete_picture',{id: picture.id }) }}" class="float-right">
+											<i class="bi bi-trash-fill">
+												Supprimer</i>
+										</a>
+									{% endif %}
 								{% endfor %}
 							{% endif %}
 						{% endif %}
@@ -47,36 +57,35 @@
 						{{ form_row(trickForm.pictures) }}
 					</div>
 
+
+<h3 class="text-center">Videos</h3>
 					<div class="mb-3">
-						{% if app.request.attributes.get('_route') == 'app_trick_app_edit' %}
-							<h3 class="text-center">Videos</h3>
-							{% if trick.videos is empty %}
-								<p class="no-content">Pas de videos</p>
-							{% else %}
-		<button type="button" class="add_item_link" data-collection-holder-class="tags">Ajouter un video</button>
+						
+							<button type="button" class="add_link_video" data-collection-holder-class="videos">Ajouter un video</button>
 
-		<ul class="videos"  data-prototype="{{ form_row(trickForm.videos.vars.prototype)|e('html_attr') }}">
-						{% for video in trickForm.videos %}
-								<li>
-								{{ form_row(video.url) }}
-							</li>
-							{% endfor %}
+							<ul class="videos" data-index="{{ trickForm.videos|length > 0 ? trickForm.videos|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(trickForm.videos.vars.prototype)|e('html_attr') }}">
+
+								{% for video in trickForm.videos %}
+									<li>
+										{{ form_row(video.url) }}
+									</li>
+								{% endfor %}
+							</ul>
+
 							
-									{% for video in trick.videos %}
-										<div class="trick-video card-img-top mx-1">
-										
-												<iframe width="30%" src="{{ video.url }}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded mx-auto d-block"></iframe>
-												<a href="{{ path('app_trick_app_delete_video',{id: video.id }) }}" class="float-right">
-													<i class="bi bi-trash-fill"></i>
-												</a>
-										
-										</div>
-									{% endfor %}
-								</ul>
-							{% endif %}
-						{% endif %}
-					</div>
+							{#{% for video in trick.videos %}
+								<div class="trick-video card-img-top mx-1">
 
+									<iframe width="30%" src="https://www.youtube.com/embed/{{ video.url }}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded mx-auto d-block"></iframe>
+									<a href="{{ path('app_trick_app_delete_video',{id: video.id }) }}" class="float-right">
+										<i class="bi bi-trash-fill"></i>
+									</a>
+
+								</div>
+							{% endfor %}#}
+
+						
+					</div>
 
 					<div class="d-grid gap-2 col-3 mx-auto my-5">
 						<button type="submit" class="btn btn-lg btn-primary mt-3" style="background-color: #45637d;">Modifier un trick</button>

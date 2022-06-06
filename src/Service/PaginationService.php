@@ -19,7 +19,7 @@ class PaginationService
         $limit = $maxItemParPage * $page;
         $this->page = $page;
         $repository = $this->entityManager->getRepository($repositoryName);
-        $this->data = $repository->findBy($criteria, $orderBy,  $limit, 0);
+        $this->data = $repository->findBy($criteria, $orderBy, $limit, 0);
     }
 
     public function getData(): mixed

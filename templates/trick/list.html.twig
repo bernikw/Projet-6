@@ -10,10 +10,10 @@
 			<h2 class="card-header text-center p-4">
 				La liste de Tricks</h2>
 			{% for trick in tricks %}
-				<div class="col-4">
-					<div class="card">
-						<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}">
-							{% if trick.pictures | length == 0 %}
+				<div class="col-lg-4 col-sm-6">
+					<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}">
+
+						{% if trick.pictures | length == 0 %}
 
 							<img src="/asset/images/defaultpicture.jpg" class="card-img-top" alt="...">
 
@@ -23,20 +23,32 @@
 
 								<img src="{{'/asset/images/' ~ picture.filename }}" class="card-img-top" alt="...">
 							{% endif %}
-							{% endfor %}
-						</a>
-						<div class="card-body">
-							<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}">
-								<h5 class="card-title">{{ trick.name }}</h5>
-							</a>
-							<p class="card-text">{{ trick.content }}</p>
-							
+						{% endfor %}
+					</a>
+					<div class="card-body">
+						<div class="row align-items-start ">
+							<div class="col-8">
+								<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}">
+									<h5 class="card-title">{{ trick.name }}</h5>
+								</a>
+							</div>
+							{% if app.user %}
+								<div class="col">
+									<a href="{{ path('app_trick_app_edit', {slug: trick.slug}) }}">
+										<i class="bi bi-pencil-fill"></i>
+									</a>
+								</div>
+								<div class="col">
+									<a href="{{ path('app_trick_app_delete', {slug: trick.slug}) }}">
+										<i class="bi bi-trash-fill"></i>
+									</a>
+								</div>
+							{% endif %}
 						</div>
+						<a href="{{ path('app_trick_app_detail', {slug: trick.slug}) }}" class="btn btn-primary mt-3" style="background-color: #45637d;">Voir plus</a>
 					</div>
-
 				</div>
 			{% endfor %}
-
 		</div>
 	</div>
 
