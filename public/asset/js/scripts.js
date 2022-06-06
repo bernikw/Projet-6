@@ -49,17 +49,3 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("salut");
     collectionHelper();
 });
-
-
-$(document).ready(function () {
-    $(".enlarge").on("click", function () {
-        $(this).toggleClass("clic-picture");
-    });
-});
-
-$(function () {
-    $("#loadMedia").on("click", function (e) {
-        e.preventDefault();
-        $("div.loadMedia").removeClass("d-none");
-        $("#loadMedia").addClass("d-none");     
-    });

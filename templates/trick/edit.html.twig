@@ -41,7 +41,7 @@
 
 										<img src="{{ ('/asset/images/' ~ picture.filename)}}" class="rounded mx-auto d-block" width="30%" alt="...">
 										<a href="{{ path('app_trick_app_main_picture',{id: picture.id }) }}" class="float-right">
-											<i class="bi bi-check-square">Main Photo</i>
+											<i class="bi bi-check-square">Mettre comme principal</i>
 										</a>
 										<a href="{{ path('app_trick_app_delete_picture',{id: picture.id }) }}" class="float-right">
 											<i class="bi bi-trash-fill">
@@ -57,21 +57,23 @@
 						{{ form_row(trickForm.pictures) }}
 					</div>
 
-					<div class="mb-3">
-						{% if app.request.attributes.get('_route') == 'app_trick_app_edit' %}
 
+<h3 class="text-center">Videos</h3>
+					<div class="mb-3">
+						
 							<button type="button" class="add_link_video" data-collection-holder-class="videos">Ajouter un video</button>
 
 							<ul class="videos" data-index="{{ trickForm.videos|length > 0 ? trickForm.videos|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(trickForm.videos.vars.prototype)|e('html_attr') }}">
 
-								<li>
-									{{ form_row(trickForm.videos) }}
-								</li>
-
+								{% for video in trickForm.videos %}
+									<li>
+										{{ form_row(video.url) }}
+									</li>
+								{% endfor %}
 							</ul>
 
-							<h3 class="text-center">Videos</h3>
-							{% for video in trick.videos %}
+							
+							{#{% for video in trick.videos %}
 								<div class="trick-video card-img-top mx-1">
 
 									<iframe width="30%" src="https://www.youtube.com/embed/{{ video.url }}" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded mx-auto d-block"></iframe>
@@ -80,9 +82,9 @@
 									</a>
 
 								</div>
-							{% endfor %}
+							{% endfor %}#}
 
-						{% endif %}
+						
 					</div>
 
 					<div class="d-grid gap-2 col-3 mx-auto my-5">

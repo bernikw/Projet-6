@@ -246,23 +246,16 @@ class TrickController extends AbstractController
 
     #[Route('/main/picture/{id}', name: 'app_main_picture')]
     #[IsGranted('ROLE_USER')]
-    public function isMain(Picture $picture, TrickRepository $trickRepository, EntityManagerInterface $entitymanager)
+    public function isMain(Picture $picture, PictureRepository $pictureRepository, EntityManagerInterface $entitymanager)
     {
        
-       
-       
+       $pictures = $pictureRepository->findBy(['trick'=> $picture->getTrick()]);
+       foreach ($pictures as $image) {
+        $image->setMain(0);
 
-//dd( $picture->getTrick()->getPictures());
-
-       $file = $picture->getFilename();
-            
-      if($picture->getMain() == 0 )
-        {     
-          
-            $picture->setFilename($file);
-            $picture->setMain(1);
-        
         }
+            
+            $picture->setMain(1);      
        
         $entitymanager->persist($picture);
         $entitymanager->flush();
