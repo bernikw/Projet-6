@@ -10,7 +10,6 @@ use App\Form\TrickType;
 use App\Form\CommentType;
 use App\Service\PaginationService;
 use App\Repository\TrickRepository;
-use App\Repository\VideoRepository;
 use App\Repository\PictureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -137,7 +136,7 @@ class TrickController extends AbstractController
 
     #[Route('/edit/{slug}', name: 'app_edit')]
     #[IsGranted('ROLE_USER')]
-    public function edit(Trick $trick, Request $request, VideoRepository $videoRepository, EntityManagerInterface $entitymanager): Response
+    public function edit(Trick $trick, Request $request, EntityManagerInterface $entitymanager): Response
     {
 
         $form = $this->createForm(TrickType::class, $trick);
