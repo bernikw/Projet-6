@@ -9,6 +9,7 @@ class PaginationService
 
     private mixed $data;
     private int $page;
+    private int $maxPage;
 
     public function __construct(private EntityManagerInterface $entityManager)
     {
@@ -19,6 +20,10 @@ class PaginationService
         $limit = $maxItemParPage * $page;
         $this->page = $page;
         $repository = $this->entityManager->getRepository($repositoryName);
+
+        $count = $repository->count($criteria); 
+        $this->maxPage = ceil($count/$maxItemParPage);
+
         $this->data = $repository->findBy($criteria, $orderBy, $limit, 0);
     }
 
@@ -27,8 +32,13 @@ class PaginationService
         return $this->data;
     }
 
-    public function nextPage(): int
+    public function nextPage(): ?int
     {
-        return $this->page + 1; 
+        $nextPage = $this->page + 1;
+        
+        if($nextPage > $this->page + 1){
+            $nextPage = null;
+        }
+        return $nextPage;
     }
 }

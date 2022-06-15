@@ -95,7 +95,6 @@ class TrickController extends AbstractController
     public function detail(Trick $trick, Request $request, EntityManagerInterface $entitymanager, PaginationService $pagination): Response
     {
 
-
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class, $comment);
@@ -121,7 +120,7 @@ class TrickController extends AbstractController
         }
 
         $page = $request->query->getInt('page', 1);  
-        $pagination->createPagination(Comment::class, [], ['createdAt'=> 'DESC'], $page, 1);
+        $pagination->createPagination(Comment::class, [], ['createdAt'=> 'DESC'], $page, 10);
 
         return $this->render(
             'trick/detail.html.twig',

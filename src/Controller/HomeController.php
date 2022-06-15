@@ -23,7 +23,7 @@ class HomeController extends AbstractController
     public function index(Request $request, PaginationService $pagination): Response
     { 
         $page = $request->query->getInt('page', 1);  
-        $pagination->createPagination(Trick::class, [], ['createdAt'=> 'DESC'], $page, 15);
+        $pagination->createPagination(Trick::class, [], ['createdAt'=> 'DESC'], $page, 10);
         
 
         return $this->render('home.html.twig', [
