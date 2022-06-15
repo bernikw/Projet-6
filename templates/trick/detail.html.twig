@@ -72,8 +72,8 @@
 			<div class="col-8 mx-auto mt-4 bg-light">
 				<h5>
 					Par:{{ trick.user.pseudo }}|
-	Crée:{{ trick.createdAt | date('d/m/Y H:i') }}: |
-	Modifiée:{{ trick.updatedAt | date('d/m/Y H:i') }}:
+						Crée:{{ trick.createdAt | date('d/m/Y H:i') }}: |
+						Modifiée:{{ trick.updatedAt | date('d/m/Y H:i') }}:
 				</h5>
 				<h5>Categorie :
 					{{ trick.category.name }}</h5>
@@ -116,11 +116,10 @@
 
 							{% if nextPage %}
 								<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
-									<a href="" id="moreComments" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus commentaires</a>
+									<a href="{{ path('app_trick_app_edit', {slug: trick.slug, page: nextPage}) }}" id="moreComments" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus commentaires</a>
 								</div>
 							{% endif %}
 						</div>
 					</div>
 				</section>
-
 			{% endblock %}

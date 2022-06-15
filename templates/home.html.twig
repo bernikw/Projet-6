@@ -71,17 +71,15 @@
 		</div>
 	</div>
 
- 
-  {% if nextPage  %}
-	<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
-		<a href="{{ path('app_home', {page: nextPage}) }}" id="moreTricks" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus tricks</a>
-	</div>
-	</ul>
+	{% if nextPage  %}
+		<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
+			<a href="{{ path('app_home', {page: nextPage}) }}" id="moreTricks" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus tricks</a>
+		</div>
 	{% endif %}
-	
 	<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 		<a href="#tricks-list">
 			<i class="bi bi-arrow-up-square" style="font-size: 2rem; color: #45637d;"></i>
 		</a>
 	</div>
-</div>{% endblock %}
+</div>
+{% endblock %}

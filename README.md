@@ -7,7 +7,7 @@
 ## SnowTricks
 Project 6 of PHP/Symfony course for OpenClassrooms
 
-This is a community blog related to Snowboard tricks. Users can manage tricks once they are created their account and log in. It is made with Symfony 6 framework without extern bundles.
+This is a community blog related to Snowboard tricks. Users can manage tricks once they are created their account and log in. It is made with Symfony 6.1 framework without extern bundles.
 
 ## Build with
 
@@ -20,11 +20,30 @@ This is a community blog related to Snowboard tricks. Users can manage tricks on
 
 ### Installation
 
-1. Copy the link on GitHub and clone it on your local repository.
-2. Composer install
-3. Create database
-4. Configure .env file 
-5. Fill the database with fixtures
+1. Git clone the project.
 
-### Launch the site
+https://github.com/bernikw/Projet-6.git
+
+2. Install libraries with https://getcomposer.org/
+
+composer install
+
+3. Create database
+
+- Configure database in .env file end serveur SMTP
+
+- Create database: 
+
+ symfony console doctrine:database:create
+
+-  Create database structure:
+
+symfony console make:migration
+
+- Insert fixtures data:
+
+symfony console doctrine:fixtures:load
+
+
+4. Launch the site
  * symfony serve

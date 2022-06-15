@@ -19,6 +19,12 @@ class VideoType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Insérer l\'URL de la vidéo',
                 ],
+                'constraints' => [
+                    new Regex(
+                        '/^.*youtu.*$/',
+                        'Le lien doit commencer par https://www.youtu'
+                    )
+                ]
                 
             ])
         ;
