@@ -116,7 +116,7 @@
 
 							{% if nextPage %}
 								<div class="d-grid gap-2 d-md-flex justify-content-md-center mx-auto my-5">
-									<a href="{{ path('app_trick_app_edit', {slug: trick.slug, page: nextPage}) }}" id="moreComments" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus commentaires</a>
+									<a href="{{ path('app_trick_app_detail', {slug: trick.slug, page: nextPage}) }}" id="moreComments" class="btn btn-primary mt-3" role="button" aria-disabled="true" style="background-color: #45637d;">Plus commentaires</a>
 								</div>
 							{% endif %}
 						</div>

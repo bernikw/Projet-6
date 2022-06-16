@@ -36,7 +36,7 @@ class PaginationService
     {
         $nextPage = $this->page + 1;
         
-        if($nextPage > $this->page + 1){
+        if($nextPage > $this->maxPage){
             $nextPage = null;
         }
         return $nextPage;
